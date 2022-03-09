@@ -161,6 +161,10 @@ public class EthereumListener extends BaseBlockchainListener {
     }
 
     private AddressListSpecification getAddressListSpecification(BcqlParser.AddressListContext ctx) {
+        // Fix: Handle empty ctx "()" (empty sender address list) by returning true
+        if (ctx == null) {
+            return AddressListSpecification.ofAny();
+        }
 
         if (ctx.BYTES_LITERAL() != null) {
             return AddressListSpecification.ofAddresses(ctx.BYTES_LITERAL().stream().map(ParseTree::getText).collect(Collectors.toList()));
