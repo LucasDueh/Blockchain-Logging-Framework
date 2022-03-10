@@ -12,19 +12,20 @@ import blf.core.state.ProgramState;
 import blf.library.util.TriFunction;
 
 /**
- * IntegerOperations, serves mostly as a wrapper around {@link java.math.BigInteger} operations.
+ * IntegerOperations, serves mostly as a wrapper around
+ * {@link java.math.BigInteger} operations.
  *
  */
 public class StringOperations {
 
-    private StringOperations() {}
+    private StringOperations() {
+    }
 
     public static List<String> split(Object[] parameters, ProgramState state) {
         return operate(
-            state,
-            parameters,
-            (string, value) -> Stream.of((string).split(value)).map(String::new).collect(Collectors.toList())
-        );
+                state,
+                parameters,
+                (string, value) -> Stream.of((string).split(value)).map(String::new).collect(Collectors.toList()));
     }
 
     public static Boolean matches(Object[] parameters, ProgramState state) {
@@ -79,7 +80,8 @@ public class StringOperations {
         return null;
     }
 
-    private static <T> T operate(ProgramState state, Object[] parameters, TriFunction<String, String, String, T> operation) {
+    private static <T> T operate(ProgramState state, Object[] parameters,
+            TriFunction<String, String, String, T> operation) {
         if (!areValidParametersTriFunction(parameters)) {
             ExceptionHandler.getInstance().handleException("Invalid parameters for method call.", new Exception());
 
@@ -104,15 +106,16 @@ public class StringOperations {
     }
 
     private static boolean areValidParametersBiFunction(Object[] parameters) {
-        return parameters != null && parameters.length == 2 && parameters[0] instanceof String && parameters[1] instanceof String;
+        return parameters != null && parameters.length == 2 && parameters[0] instanceof String
+                && parameters[1] instanceof String;
     }
 
     private static boolean areValidParametersTriFunction(Object[] parameters) {
         return parameters != null
-            && parameters.length == 3
-            && parameters[0] instanceof String
-            && parameters[1] instanceof String
-            && parameters[2] instanceof String;
+                && parameters.length == 3
+                && parameters[0] instanceof String
+                && parameters[1] instanceof String
+                && parameters[2] instanceof String;
     }
 
 }
