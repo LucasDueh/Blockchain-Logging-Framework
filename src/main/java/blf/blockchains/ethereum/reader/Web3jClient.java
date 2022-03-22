@@ -10,6 +10,9 @@ import org.web3j.abi.datatypes.Type;
 import org.web3j.protocol.Service;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterNumber;
+
+import org.web3j.protocol.core.DefaultBlockParameterName;
+
 import org.web3j.protocol.core.methods.request.EthFilter;
 import org.web3j.protocol.core.methods.response.*;
 import org.web3j.protocol.core.methods.response.EthBlock.Block;
@@ -27,7 +30,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 /**
  * Web3jClient
@@ -51,7 +53,8 @@ public class Web3jClient implements EthereumClient {
         this.web3j = Web3j.build(service);
     }
 
-    // TODO: probably not the best solution to have a static function -> rework to make it non-static
+    // TODO: probably not the best solution to have a static function -> rework to
+    // make it non-static
     public static Web3jClient connectWebsocket(String url) {
 
         try {
@@ -68,7 +71,8 @@ public class Web3jClient implements EthereumClient {
         return null;
     }
 
-    // TODO: probably not the best solution to have a static function -> rework to make it non-static
+    // TODO: probably not the best solution to have a static function -> rework to
+    // make it non-static
     public static Web3jClient connectIpc(String path) {
 
         final Service service = createIpcService(path);
@@ -145,27 +149,28 @@ public class Web3jClient implements EthereumClient {
 
     @SuppressWarnings("all")
     public List<Type> queryPublicMember(
-        String contract,
-        BigInteger block,
-        String memberName,
-        List<Type> inputParameters,
-        List<TypeReference<?>> returnTypes
-    ) throws IOException {
+            String contract,
+            BigInteger block,
+            String memberName,
+            List<Type> inputParameters,
+            List<TypeReference<?>> returnTypes) throws IOException {
         assert contract != null;
         assert block != null;
         assert memberName != null;
         assert inputParameters != null && inputParameters.stream().allMatch(Objects::nonNull);
         assert returnTypes != null && returnTypes.stream().allMatch(Objects::nonNull);
         Function function = new Function(memberName, inputParameters, returnTypes);
+        System.out.println("queryPublicMember: memberName: " + memberName);
+        System.out.println("queryPublicMember: inputParameters: " + inputParameters);
+        System.out.println("queryPublicMember: returnTypes: " + returnTypes);
         String data = FunctionEncoder.encode(function);
+        System.out.println("queryPublicMember: Encoded function: " + data);
         org.web3j.protocol.core.methods.request.Transaction tx = org.web3j.protocol.core.methods.request.Transaction
-            .createEthCallTransaction(contract, contract, data);
+                .createEthCallTransaction(contract, contract, data);
         final DefaultBlockParameterNumber number = new DefaultBlockParameterNumber(block);
         EthCall result = this.web3j.ethCall(tx, number).send();
-        return FunctionReturnDecoder.decode(
-            result.getResult(),
-            returnTypes.stream().map(t -> (TypeReference<Type>) t).collect(Collectors.toList())
-        );
+        System.out.println("queryPublicMember: Eth Call Value: " + result.getValue());
+        return FunctionReturnDecoder.decode(result.getResult(), function.getOutputParameters());
     }
 
     public EthereumBlock queryBlockData(BigInteger blockNumber) {
@@ -248,9 +253,9 @@ public class Web3jClient implements EthereumClient {
 
     private void addLog(EthereumBlock ethBlock, @NonNull Log log) {
         final EthereumTransaction tx = ethBlock.transactionStream()
-            .filter(t -> t.getHash().equals(log.getTransactionHash()))
-            .findAny()
-            .orElse(null);
+                .filter(t -> t.getHash().equals(log.getTransactionHash()))
+                .findAny()
+                .orElse(null);
         if (tx == null) {
             LOGGER.log(Level.WARNING, "Could not find transaction with hash {0}.", log.getTransactionHash());
             return;
