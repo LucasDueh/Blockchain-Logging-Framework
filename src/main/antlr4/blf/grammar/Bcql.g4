@@ -88,6 +88,7 @@ filter
     | logEntryFilter
     | smartContractFilter
     | genericFilter
+    | transactionInputDecodingFilter
     ;
 
 
@@ -147,12 +148,12 @@ genericFilter
 
 //      DECODING: Primary grammar rules to specify the decoding of Ethereum-related blockchain data
 
-/** A transactionInputDecoding consists of
+/** A transactionInputDecodingFilter consists of
  *  - at least one smartContractParameter (devided by ','), defining the decoded input parameters of the respective function
  *  - a value expression which holds the value of the transaction input
  */
 
-transactionInputDecoding
+transactionInputDecodingFilter
     : KEY_DECODE_ETH_TX_INPUT '(' smartContractParameter (',' smartContractParameter)* '=' valueExpression ')'
     ;
 
