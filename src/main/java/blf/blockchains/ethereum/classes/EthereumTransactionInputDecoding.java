@@ -80,14 +80,11 @@ public class EthereumTransactionInputDecoding {
             final Object value = values.get(i).getValue();
             final String name = this.inputArguments.get(i).getName();
             state.getValueStore().setValue(name, value);
-            state.getValueStore().printValues(); // TODO: Remove this
         });
     }
 
     @SuppressWarnings("all")
     private boolean matchOutputParameters(List<Type> values) {
-        System.out.println("matchInputArguments: Values Size: " + values.size());
-        System.out.println("matchInputArguments: InputArgs Size: " + this.inputArguments.size());
         if (values.size() != this.inputArguments.size()) {
             return false;
         }
@@ -98,7 +95,6 @@ public class EthereumTransactionInputDecoding {
     @SuppressWarnings("all")
     private boolean typesMatch(Type type, Parameter parameter) {
         if (type == null) {
-            System.out.println("type == null");
             return false;
         }
         try {

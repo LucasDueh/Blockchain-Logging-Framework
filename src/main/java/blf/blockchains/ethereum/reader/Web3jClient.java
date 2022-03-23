@@ -159,16 +159,11 @@ public class Web3jClient implements EthereumClient {
         assert inputParameters != null && inputParameters.stream().allMatch(Objects::nonNull);
         assert returnTypes != null && returnTypes.stream().allMatch(Objects::nonNull);
         Function function = new Function(memberName, inputParameters, returnTypes);
-        System.out.println("queryPublicMember: memberName: " + memberName);
-        System.out.println("queryPublicMember: inputParameters: " + inputParameters);
-        System.out.println("queryPublicMember: returnTypes: " + returnTypes);
         String data = FunctionEncoder.encode(function);
-        System.out.println("queryPublicMember: Encoded function: " + data);
         org.web3j.protocol.core.methods.request.Transaction tx = org.web3j.protocol.core.methods.request.Transaction
             .createEthCallTransaction(contract, contract, data);
         final DefaultBlockParameterNumber number = new DefaultBlockParameterNumber(block);
         EthCall result = this.web3j.ethCall(tx, number).send();
-        System.out.println("queryPublicMember: Eth Call Value: " + result.getValue());
         return FunctionReturnDecoder.decode(result.getResult(), function.getOutputParameters());
     }
 
