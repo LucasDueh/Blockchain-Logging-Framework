@@ -94,7 +94,10 @@ public class FilterNestingAnalyzer extends SemanticAnalyzer {
         VALID_ENCLOSING_FILTERS.put(LOG_ENRY_FILTER, FilterNestingAnalyzer::areLogEntryFilterParentsValid);
         VALID_ENCLOSING_FILTERS.put(GENERIC_FILTER, FilterNestingAnalyzer::areGenericFilterParentsValid);
         VALID_ENCLOSING_FILTERS.put(SMART_CONTRACT_FILTER, FilterNestingAnalyzer::areSmartContractFilterParentsValid);
-        VALID_ENCLOSING_FILTERS.put(TRANSACTION_INPUT_DECODING_FILTER, FilterNestingAnalyzer::areTransactionInputDecodingFilterParentsValid);
+        VALID_ENCLOSING_FILTERS.put(
+            TRANSACTION_INPUT_DECODING_FILTER,
+            FilterNestingAnalyzer::areTransactionInputDecodingFilterParentsValid
+        );
     }
 
     private static boolean areBlockFilterParentsValid(Stack<String> stack) {
@@ -127,9 +130,9 @@ public class FilterNestingAnalyzer extends SemanticAnalyzer {
     }
 
     private static boolean areTransactionInputDecodingFilterParentsValid(Stack<String> stack) {
-        return !stack.isEmpty() 
-            && stack.peek().equals(TRANSACTION_FILTER) 
-            && countFilters(stack, BLOCK_FILTER) == 1 
+        return !stack.isEmpty()
+            && stack.peek().equals(TRANSACTION_FILTER)
+            && countFilters(stack, BLOCK_FILTER) == 1
             && countFilters(stack, TRANSACTION_FILTER) <= 1;
     }
 }
