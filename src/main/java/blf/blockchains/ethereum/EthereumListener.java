@@ -203,6 +203,8 @@ public class EthereumListener extends BaseBlockchainListener {
         final BcqlParser.BlockFilterContext blockFilterCtx = filterCtx.blockFilter();
         final BcqlParser.TransactionFilterContext transactionFilterCtx = filterCtx.transactionFilter();
         final BcqlParser.SmartContractFilterContext smartContractFilterCtx = filterCtx.smartContractFilter();
+        final BcqlParser.TransactionInputDecodingFilterContext transactionInputDecodingFilterCtx = filterCtx
+            .transactionInputDecodingFilter();
 
         // already handled by exitScope method in super
         if (filterCtx.genericFilter() != null) {
@@ -229,6 +231,12 @@ public class EthereumListener extends BaseBlockchainListener {
 
         if (smartContractFilterCtx != null) {
             this.buildSmartContractFilter(smartContractFilterCtx);
+
+            return;
+        }
+
+        if (transactionInputDecodingFilterCtx != null) {
+            this.buildTransactionInputDecodingFilter(transactionInputDecodingFilterCtx);
 
             return;
         }
@@ -305,4 +313,19 @@ public class EthereumListener extends BaseBlockchainListener {
         return ParameterSpecification.of(ctx.variableName().getText(), ctx.solType().getText());
     }
 
+    @Override
+    public void enterTransactionInputDecodingFilter(BcqlParser.TransactionInputDecodingFilterContext ctx) {
+        LOGGER.info("Prepare transaction input decoding filter build");
+        this.composer.prepareTransactionInputDecodingFilterBuild();
+    }
+
+    private void buildTransactionInputDecodingFilter(BcqlParser.TransactionInputDecodingFilterContext ctx) {
+        LOGGER.info("Build transaction input decoding filter");
+        final List<ParameterSpecification> inputArgs = ctx.smartContractParameter()
+            .stream()
+            .map(this::createParameterSpecification)
+            .collect(Collectors.toList());
+
+        this.composer.buildTransactionInputDecodingFilter(inputArgs);
+    }
 }
