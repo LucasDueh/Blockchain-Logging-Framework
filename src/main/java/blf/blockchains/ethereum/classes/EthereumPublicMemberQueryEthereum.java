@@ -89,11 +89,14 @@ public class EthereumPublicMemberQueryEthereum implements EthereumSmartContractQ
             final Object value = values.get(i).getValue();
             final String name = this.outputParameters.get(i).getName();
             state.getValueStore().setValue(name, value);
+            state.getValueStore().printValues(); // TODO: Remove this
         });
     }
 
     @SuppressWarnings("all")
     private boolean matchOutputParameters(List<Type> values) {
+        System.out.println("matchOutputParameters: Values Size: " + values.size());
+        System.out.println("matchOutputParameters: Output Params Size: " + this.outputParameters.size());
         if (values.size() != this.outputParameters.size()) {
             return false;
         }

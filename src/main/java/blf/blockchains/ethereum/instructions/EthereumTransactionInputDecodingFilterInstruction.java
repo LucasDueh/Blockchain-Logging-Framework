@@ -12,9 +12,9 @@ import java.util.List;
  * Transaction Input Decoding Scope
  */
 public class EthereumTransactionInputDecodingFilterInstruction extends Instruction {
-  private final EthereumTransactionInputDecoding decoding;
+    private final EthereumTransactionInputDecoding decoding;
 
-  public EthereumTransactionInputDecodingFilterInstruction(
+    public EthereumTransactionInputDecodingFilterInstruction(
         @NonNull EthereumTransactionInputDecoding decoding,
         List<Instruction> instructions
     ) {
