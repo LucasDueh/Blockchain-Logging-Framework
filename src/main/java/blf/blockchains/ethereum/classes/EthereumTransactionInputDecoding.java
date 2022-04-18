@@ -10,6 +10,9 @@ import io.reactivex.annotations.NonNull;
 import org.web3j.abi.TypeDecoder;
 import org.web3j.abi.TypeReference;
 import org.web3j.abi.datatypes.Type;
+import org.web3j.abi.FunctionReturnDecoder;
+
+import static org.web3j.abi.Utils.convert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,24 +46,44 @@ public class EthereumTransactionInputDecoding {
             final EthereumDataReader ethereumReader = ethereumProgramState.getReader();
 
             final List<TypeReference<?>> inputTypeReferences = this.createReturnTypes();
+            assert inputTypeReferences.size() == this.inputArguments.size();
 
             String input = ethereumReader.getCurrentTransaction().getInput();
 
-            assert inputTypeReferences.size() == this.inputArguments.size();
-            final List<Type> values;
+            final List<Object> results = FunctionReturnDecoder
+                    .decode(input, convert(inputTypeReferences))
+                    .stream()
+                    .map(Type::getValue)
+                    .collect(Collectors.toList());
+
+            assert this.inputArguments.size() == results.size();
+
             for (int i = 0; i < this.inputArguments.size(); i++) {
-                // Class cl = inputTypeReferences.get(i).getClassType();
                 String nameOfVariable = this.inputArguments.get(i).getName();
-                // TypeDecoder.decode(input, 4, inputTypeReferences.get(i));
-                // Object value = results.get(i);
-                state.getValueStore().setValue(nameOfVariable, "Test Value");
+                Object value = results.get(i);
+                state.getValueStore().setValue(nameOfVariable, value);
                 System.out.println("inputArguments tx.input: " + input);
                 System.out.println("inputArguments type: " + this.inputArguments.get(i).getType());
                 System.out.println("inputArguments name: " + this.inputArguments.get(i).getName());
             }
 
-            // final List<Type> values = client.decodeTransactionInput(inputs);
-            // this.setValues(values, state);
+            // for (int i = 0; i < this.inputArguments.size(); i++) {
+            // TypeReference<?> typeReference = inputTypeReferences.get(i);
+
+            // // Class<Type> classType = (Class<Type>) typeReference.getClassType();
+
+            // // Type result;
+            // // Class cl = inputTypeReferences.get(i).getClassType();
+            // String nameOfVariable = this.inputArguments.get(i).getName();
+            // // TypeDecoder.decode(input, 4, inputTypeReferences.get(i));
+            // // Object value = results.get(i);
+            // state.getValueStore().setValue(nameOfVariable, "Test Value");
+            // System.out.println("inputArguments tx.input: " + input);
+            // System.out.println("inputArguments type: " +
+            // this.inputArguments.get(i).getType());
+            // System.out.println("inputArguments name: " +
+            // this.inputArguments.get(i).getName());
+            // }
         } catch (Throwable cause) {
             ExceptionHandler.getInstance().handleException(queryErrorMsg, cause);
         }
@@ -70,37 +93,37 @@ public class EthereumTransactionInputDecoding {
         return this.inputArguments.stream().map(Parameter::getType).collect(Collectors.toList());
     }
 
-    @SuppressWarnings("all")
-    private void setValues(List<Type> values, EthereumProgramState state) {
-        if (!this.matchOutputParameters(values)) {
-            throw new IllegalArgumentException("Output parameters not compatible with return values.");
-        }
+    // @SuppressWarnings("all")
+    // private void setValues(List<Type> values, EthereumProgramState state) {
+    //     if (!this.matchOutputParameters(values)) {
+    //         throw new IllegalArgumentException("Output parameters not compatible with return values.");
+    //     }
 
-        IntStream.range(0, values.size()).forEach(i -> {
-            final Object value = values.get(i).getValue();
-            final String name = this.inputArguments.get(i).getName();
-            state.getValueStore().setValue(name, value);
-        });
-    }
+    //     IntStream.range(0, values.size()).forEach(i -> {
+    //         final Object value = values.get(i).getValue();
+    //         final String name = this.inputArguments.get(i).getName();
+    //         state.getValueStore().setValue(name, value);
+    //     });
+    // }
 
-    @SuppressWarnings("all")
-    private boolean matchOutputParameters(List<Type> values) {
-        if (values.size() != this.inputArguments.size()) {
-            return false;
-        }
+    // @SuppressWarnings("all")
+    // private boolean matchOutputParameters(List<Type> values) {
+    //     if (values.size() != this.inputArguments.size()) {
+    //         return false;
+    //     }
 
-        return IntStream.range(0, values.size()).allMatch(i -> typesMatch(values.get(i), this.inputArguments.get(i)));
-    }
+    //     return IntStream.range(0, values.size()).allMatch(i -> typesMatch(values.get(i), this.inputArguments.get(i)));
+    // }
 
-    @SuppressWarnings("all")
-    private boolean typesMatch(Type type, Parameter parameter) {
-        if (type == null) {
-            return false;
-        }
-        try {
-            return parameter.getType().getClassType().equals(type.getClass());
-        } catch (Throwable cause) {
-            return false;
-        }
-    }
+    // @SuppressWarnings("all")
+    // private boolean typesMatch(Type type, Parameter parameter) {
+    //     if (type == null) {
+    //         return false;
+    //     }
+    //     try {
+    //         return parameter.getType().getClassType().equals(type.getClass());
+    //     } catch (Throwable cause) {
+    //         return false;
+    //     }
+    // }
 }
