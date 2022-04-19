@@ -42,13 +42,13 @@ public class EthereumTransactionInputDecoding {
         }
 
         try {
-            final List<TypeReference<?>> inputTypeReferences = this.createReturnTypes();
+            final List<TypeReference<?>> inputTypeReferences = this.createInputTypes();
             assert inputTypeReferences.size() == this.inputArguments.size();
 
             final List<Object> results = FunctionReturnDecoder.decode(input, convert(inputTypeReferences))
-                .stream()
-                .map(Type::getValue)
-                .collect(Collectors.toList());
+                    .stream()
+                    .map(Type::getValue)
+                    .collect(Collectors.toList());
 
             assert this.inputArguments.size() == results.size();
 
@@ -68,7 +68,7 @@ public class EthereumTransactionInputDecoding {
         }
     }
 
-    private List<TypeReference<?>> createReturnTypes() {
+    private List<TypeReference<?>> createInputTypes() {
         return this.inputArguments.stream().map(Parameter::getType).collect(Collectors.toList());
     }
 
