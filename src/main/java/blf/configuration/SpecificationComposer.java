@@ -14,6 +14,8 @@ import blf.core.values.ValueAccessor;
 import blf.core.values.ValueMutator;
 import blf.core.parameters.Parameter;
 
+import blf.core.interfaces.FilterPredicate;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -195,7 +197,14 @@ public class SpecificationComposer {
         this.closeScope(filter);
     }
 
-    public void buildTransactionInputDecodingFilter(List<ParameterSpecification> inputArguments) {
+    public void buildTransactionInputDecodingFilter(
+        ValueAccessorSpecification functionIdentifier,
+        List<ParameterSpecification> inputArguments
+    ) {
+        // TODO: Create TransactionInputDecodingFilterSpecification which contains the
+        // above paramerts
+        // TransactionInputDecodingFilterSpecification specification
+        // specification.getFunctionIdentifier(), specification.getInputArguments()
         final FactoryState statesPeek = this.states.peek();
 
         if (statesPeek != FactoryState.TRANSACTION_INPUT_DECODING_FILTER) {
@@ -208,9 +217,19 @@ public class SpecificationComposer {
             return;
         }
 
+        FilterPredicate<String> transactionInputCriterion = (state, funcIdentifier) -> {
+            final ValueAccessor accessor = functionIdentifier.getValueAccessor();
+            final Object value = accessor.getValue(state);
+            if (value instanceof String) {
+                return funcIdentifier.equals(value);
+            }
+            return false;
+        };
+
         final List<Parameter> inputs = inputArguments.stream().map(ParameterSpecification::getParameter).collect(Collectors.toList());
         final EthereumTransactionInputDecoding decoding = new EthereumTransactionInputDecoding(inputs);
         final EthereumTransactionInputDecodingFilterInstruction filter = new EthereumTransactionInputDecodingFilterInstruction(
+            transactionInputCriterion,
             decoding,
             this.instructionListsStack.peek()
         );
