@@ -19,7 +19,7 @@ KEY_SMART_CONTRACT : S M A R T ' ' C O N T R A C T;     // initiates a smartCont
 KEY_LOG_ENTRIES : L O G ' ' E N T R I E S ;             // initiates a logEntryFilter
 KEY_IF : I F;                                           // initiates a smartContractFilter
 
-KEY_DECODE_ETH_TX_INPUT: D E C O D E ' ' E T H ' ' T X ' ' I N P U T ; // initiates the decoding of the input field of a transaction
+KEY_TRANSACTION_INPUT: T R A N S A C T I O N ' ' I N P U T ; // initiates a TransactionInputFilter
 
 KEY_EMIT: E M I T;                                      // initiates an emit statements
 KEY_CSV_ROW: C S V ' ' R O W;                           // csv output specification for the emit statement
