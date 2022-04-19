@@ -53,15 +53,10 @@ public class EthereumTransactionInputDecoding {
 
             assert this.inputArguments.size() == results.size();
 
-            System.out.println("tx.input: " + input);
-
             for (int i = 0; i < this.inputArguments.size(); i++) {
                 String nameOfVariable = this.inputArguments.get(i).getName();
                 Object value = results.get(i);
                 state.getValueStore().setValue(nameOfVariable, value);
-
-                System.out.println("nameOfVariable: " + nameOfVariable);
-                System.out.println("value: " + value);
             }
         } catch (Throwable cause) {
             ExceptionHandler.getInstance().handleException(queryErrorMsg, cause);
