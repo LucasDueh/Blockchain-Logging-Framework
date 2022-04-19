@@ -46,9 +46,9 @@ public class EthereumTransactionInputDecoding {
             assert inputTypeReferences.size() == this.inputArguments.size();
 
             final List<Object> results = FunctionReturnDecoder.decode(input, convert(inputTypeReferences))
-                    .stream()
-                    .map(Type::getValue)
-                    .collect(Collectors.toList());
+                .stream()
+                .map(Type::getValue)
+                .collect(Collectors.toList());
 
             assert this.inputArguments.size() == results.size();
 
