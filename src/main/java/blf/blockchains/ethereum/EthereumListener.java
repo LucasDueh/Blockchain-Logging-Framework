@@ -36,15 +36,13 @@ public class EthereumListener extends BaseBlockchainListener {
 
         if (literal.STRING_LITERAL() == null) {
             ExceptionHandler.getInstance()
-                    .handleException("Ethereum SET CONNECTION parameter should be a String.",
-                            new NullPointerException());
+                .handleException("Ethereum SET CONNECTION parameter should be a String.", new NullPointerException());
 
             return;
         }
 
         if (this.composer.instructionListsStack.isEmpty()) {
-            ExceptionHandler.getInstance().handleException("The Stack of instructions lists is empty.",
-                    new Exception());
+            ExceptionHandler.getInstance().handleException("The Stack of instructions lists is empty.", new Exception());
 
             return;
         }
@@ -74,37 +72,34 @@ public class EthereumListener extends BaseBlockchainListener {
 
         if (this.composer.states.peek() != SpecificationComposer.FactoryState.BLOCK_RANGE_FILTER) {
             ExceptionHandler.getInstance()
-                    .handleException("Cannot build a block filter, when construction of %s has not been finished.",
-                            new Exception());
+                .handleException("Cannot build a block filter, when construction of %s has not been finished.", new Exception());
 
             return;
         }
 
         if (from == null) {
-            ExceptionHandler.getInstance().handleException("The FROM BlockNumberSpecification is null.",
-                    new NullPointerException());
+            ExceptionHandler.getInstance().handleException("The FROM BlockNumberSpecification is null.", new NullPointerException());
 
             return;
         }
 
         if (to == null) {
-            ExceptionHandler.getInstance().handleException("The TO BlockNumberSpecification is null.",
-                    new NullPointerException());
+            ExceptionHandler.getInstance().handleException("The TO BlockNumberSpecification is null.", new NullPointerException());
 
             return;
         }
 
         if (this.composer.instructionListsStack.isEmpty()) {
-            ExceptionHandler.getInstance().handleException("The Stack of instructions lists is empty.",
-                    new Exception());
+            ExceptionHandler.getInstance().handleException("The Stack of instructions lists is empty.", new Exception());
 
             return;
         }
 
         final EthereumBlockFilterInstruction blockRange = new EthereumBlockFilterInstruction(
-                from.getValueAccessor(),
-                to.getStopCriterion(),
-                this.composer.instructionListsStack.peek());
+            from.getValueAccessor(),
+            to.getStopCriterion(),
+            this.composer.instructionListsStack.peek()
+        );
 
         this.composer.instructionListsStack.pop();
         this.composer.instructionListsStack.peek().add(blockRange);
@@ -133,8 +128,7 @@ public class EthereumListener extends BaseBlockchainListener {
         }
 
         ExceptionHandler.getInstance()
-                .handleException("Block number specification failed: unsupported variable declaration.",
-                        new Exception());
+            .handleException("Block number specification failed: unsupported variable declaration.", new Exception());
 
         return null;
     }
@@ -173,8 +167,7 @@ public class EthereumListener extends BaseBlockchainListener {
         }
 
         if (ctx.BYTES_LITERAL() != null) {
-            return AddressListSpecification
-                    .ofAddresses(ctx.BYTES_LITERAL().stream().map(ParseTree::getText).collect(Collectors.toList()));
+            return AddressListSpecification.ofAddresses(ctx.BYTES_LITERAL().stream().map(ParseTree::getText).collect(Collectors.toList()));
         }
 
         if (ctx.KEY_ANY() != null) {
@@ -192,8 +185,8 @@ public class EthereumListener extends BaseBlockchainListener {
         final LinkedList<ParameterSpecification> parameters = new LinkedList<>();
         for (BcqlParser.LogEntryParameterContext paramCtx : ctx.logEntryParameter()) {
             parameters.add(
-                    ParameterSpecification.of(paramCtx.variableName().getText(), paramCtx.solType().getText(),
-                            paramCtx.KEY_INDEXED() != null));
+                ParameterSpecification.of(paramCtx.variableName().getText(), paramCtx.solType().getText(), paramCtx.KEY_INDEXED() != null)
+            );
         }
         return LogEntrySignatureSpecification.of(ctx.methodName.getText(), parameters);
     }
@@ -211,7 +204,7 @@ public class EthereumListener extends BaseBlockchainListener {
         final BcqlParser.TransactionFilterContext transactionFilterCtx = filterCtx.transactionFilter();
         final BcqlParser.SmartContractFilterContext smartContractFilterCtx = filterCtx.smartContractFilter();
         final BcqlParser.TransactionInputDecodingFilterContext transactionInputDecodingFilterCtx = filterCtx
-                .transactionInputDecodingFilter();
+            .transactionInputDecodingFilter();
 
         // already handled by exitScope method in super
         if (filterCtx.genericFilter() != null) {
@@ -275,28 +268,27 @@ public class EthereumListener extends BaseBlockchainListener {
 
     private SmartContractQuerySpecification handlePublicFunctionQuery(BcqlParser.PublicFunctionQueryContext ctx) {
         final List<ParameterSpecification> outputParams = ctx.smartContractParameter()
-                .stream()
-                .map(this::createParameterSpecification)
-                .collect(Collectors.toList());
+            .stream()
+            .map(this::createParameterSpecification)
+            .collect(Collectors.toList());
 
         final List<TypedValueAccessorSpecification> inputParameters = new ArrayList<>();
         for (BcqlParser.SmartContractQueryParameterContext paramCtx : ctx.smartContractQueryParameter()) {
             inputParameters.add(this.createTypedValueAccessor(paramCtx));
         }
 
-        return SmartContractQuerySpecification.ofMemberFunction(ctx.methodName.getText(), inputParameters,
-                outputParams);
+        return SmartContractQuerySpecification.ofMemberFunction(ctx.methodName.getText(), inputParameters, outputParams);
     }
 
-    private TypedValueAccessorSpecification createTypedValueAccessor(
-            BcqlParser.SmartContractQueryParameterContext ctx) {
+    private TypedValueAccessorSpecification createTypedValueAccessor(BcqlParser.SmartContractQueryParameterContext ctx) {
 
         if (ctx.variableName() != null) {
             final String varName = ctx.variableName().getText();
 
             return TypedValueAccessorSpecification.of(
-                    this.variableAnalyzer.getVariableType(varName),
-                    ValueAccessorSpecification.ofVariable(varName, this.state.getBlockchainVariables()));
+                this.variableAnalyzer.getVariableType(varName),
+                ValueAccessorSpecification.ofVariable(varName, this.state.getBlockchainVariables())
+            );
         }
 
         if (ctx.solType() != null) {
@@ -305,16 +297,16 @@ public class EthereumListener extends BaseBlockchainListener {
         }
 
         ExceptionHandler.getInstance()
-                .handleException(
-                        "Creation of typed value accessor failed: Unsupported way of defining typed value accessors.",
-                        new Exception());
+            .handleException(
+                "Creation of typed value accessor failed: Unsupported way of defining typed value accessors.",
+                new Exception()
+            );
 
         return null;
     }
 
     private SmartContractQuerySpecification handlePublicVariableQuery(BcqlParser.PublicVariableQueryContext ctx) {
-        return SmartContractQuerySpecification
-                .ofMemberVariable(createParameterSpecification(ctx.smartContractParameter()));
+        return SmartContractQuerySpecification.ofMemberVariable(createParameterSpecification(ctx.smartContractParameter()));
     }
 
     private ParameterSpecification createParameterSpecification(BcqlParser.SmartContractParameterContext ctx) {
@@ -332,9 +324,9 @@ public class EthereumListener extends BaseBlockchainListener {
         final ValueAccessorSpecification functionIdentifier = this.getValueAccessor(ctx.functionIdentifier);
 
         final List<ParameterSpecification> inputArgs = ctx.smartContractParameter()
-                .stream()
-                .map(this::createParameterSpecification)
-                .collect(Collectors.toList());
+            .stream()
+            .map(this::createParameterSpecification)
+            .collect(Collectors.toList());
 
         this.composer.buildTransactionInputDecodingFilter(functionIdentifier, inputArgs);
     }
