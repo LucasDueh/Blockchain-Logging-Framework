@@ -45,10 +45,11 @@ public class EthereumTransactionInputDecoding {
             final List<TypeReference<?>> inputTypeReferences = this.createInputTypes();
             assert inputTypeReferences.size() == this.inputArguments.size();
 
-            final List<Object> results = FunctionReturnDecoder.decode(input, convert(inputTypeReferences))
-                .stream()
-                .map(Type::getValue)
-                .collect(Collectors.toList());
+            String encodedInputArgs = input.substring(10);
+            final List<Object> results = FunctionReturnDecoder.decode(encodedInputArgs, convert(inputTypeReferences))
+                    .stream()
+                    .map(Type::getValue)
+                    .collect(Collectors.toList());
 
             assert this.inputArguments.size() == results.size();
 
@@ -60,7 +61,6 @@ public class EthereumTransactionInputDecoding {
                 state.getValueStore().setValue(nameOfVariable, value);
 
                 System.out.println("nameOfVariable: " + nameOfVariable);
-                System.out.println("inputArguments type: " + this.inputArguments.get(i).getType());
                 System.out.println("value: " + value);
             }
         } catch (Throwable cause) {
