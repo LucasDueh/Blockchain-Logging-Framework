@@ -18,9 +18,10 @@ public class EthereumTransactionInputDecodingFilterInstruction extends Instructi
     private final EthereumTransactionInputDecoding decoding;
 
     public EthereumTransactionInputDecodingFilterInstruction(
-            @NonNull FilterPredicate<String> transactionInputCriterion,
-            @NonNull EthereumTransactionInputDecoding decoding,
-            List<Instruction> instructions) {
+        @NonNull FilterPredicate<String> transactionInputCriterion,
+        @NonNull EthereumTransactionInputDecoding decoding,
+        List<Instruction> instructions
+    ) {
         super(instructions);
         this.transactionInputCriterion = transactionInputCriterion;
         this.decoding = decoding;
