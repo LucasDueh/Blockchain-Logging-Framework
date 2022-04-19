@@ -256,6 +256,16 @@ public class RootListener implements BcqlListener {
     }
 
     @Override
+    public void enterTransactionInputDecodingFilter(TransactionInputDecodingFilterContext ctx) {
+        this.notifyListener(BcqlListener::enterTransactionInputDecodingFilter, ctx);
+    }
+
+    @Override
+    public void exitTransactionInputDecodingFilter(TransactionInputDecodingFilterContext ctx) {
+        this.notifyListener(BcqlListener::exitTransactionInputDecodingFilter, ctx);
+    }
+
+    @Override
     public void enterAddressList(AddressListContext ctx) {
         this.notifyListener(BcqlListener::enterAddressList, ctx);
     }

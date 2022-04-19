@@ -104,7 +104,6 @@ public class EthereumPublicMemberQueryEthereum implements EthereumSmartContractQ
     @SuppressWarnings("all")
     private boolean typesMatch(Type type, Parameter parameter) {
         if (type == null) {
-            System.out.println("type == null");
             return false;
         }
         try {

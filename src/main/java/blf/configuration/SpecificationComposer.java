@@ -1,8 +1,10 @@
 package blf.configuration;
 
+import blf.blockchains.ethereum.classes.EthereumTransactionInputDecoding;
 import blf.blockchains.ethereum.instructions.EthereumLogEntryFilterInstruction;
 import blf.blockchains.ethereum.instructions.EthereumSmartContractFilterInstruction;
 import blf.blockchains.ethereum.instructions.EthereumTransactionFilterInstruction;
+import blf.blockchains.ethereum.instructions.EthereumTransactionInputDecodingFilterInstruction;
 import blf.core.Program;
 import blf.core.exceptions.ExceptionHandler;
 import blf.core.instructions.GenericFilterInstruction;
@@ -10,6 +12,9 @@ import blf.core.instructions.Instruction;
 import blf.core.state.ProgramState;
 import blf.core.values.ValueAccessor;
 import blf.core.values.ValueMutator;
+import blf.core.parameters.Parameter;
+
+import blf.core.interfaces.FilterPredicate;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -50,6 +55,10 @@ public class SpecificationComposer {
         this.prepareBuild(FactoryState.SMART_CONTRACT_FILTER, FactoryState.BLOCK_RANGE_FILTER);
     }
 
+    public void prepareTransactionInputDecodingFilterBuild() {
+        this.prepareBuild(FactoryState.TRANSACTION_INPUT_DECODING_FILTER, FactoryState.TRANSACTION_FILTER);
+    }
+
     public void prepareGenericFilterBuild() {
         this.prepareBuild(
             FactoryState.GENERIC_FILTER,
@@ -57,6 +66,7 @@ public class SpecificationComposer {
             FactoryState.TRANSACTION_FILTER,
             FactoryState.LOG_ENTRY_FILTER,
             FactoryState.SMART_CONTRACT_FILTER,
+            FactoryState.TRANSACTION_INPUT_DECODING_FILTER,
             FactoryState.PROGRAM
         );
     }
@@ -187,6 +197,46 @@ public class SpecificationComposer {
         this.closeScope(filter);
     }
 
+    public void buildTransactionInputDecodingFilter(
+        ValueAccessorSpecification functionIdentifier,
+        List<ParameterSpecification> inputArguments
+    ) {
+        // TODO: Create TransactionInputDecodingFilterSpecification which contains the
+        // above paramerts
+        // TransactionInputDecodingFilterSpecification specification
+        // specification.getFunctionIdentifier(), specification.getInputArguments()
+        final FactoryState statesPeek = this.states.peek();
+
+        if (statesPeek != FactoryState.TRANSACTION_INPUT_DECODING_FILTER) {
+            final String errorMsg = String.format(
+                "Cannot build a transaction input decoding filter, when construction of %s has not been finished.",
+                statesPeek
+            );
+            ExceptionHandler.getInstance().handleException(errorMsg, new Exception());
+
+            return;
+        }
+
+        FilterPredicate<String> transactionInputCriterion = (state, funcIdentifier) -> {
+            final ValueAccessor accessor = functionIdentifier.getValueAccessor();
+            final Object value = accessor.getValue(state);
+            if (value instanceof String) {
+                return funcIdentifier.equals(value);
+            }
+            return false;
+        };
+
+        final List<Parameter> inputs = inputArguments.stream().map(ParameterSpecification::getParameter).collect(Collectors.toList());
+        final EthereumTransactionInputDecoding decoding = new EthereumTransactionInputDecoding(inputs);
+        final EthereumTransactionInputDecodingFilterInstruction filter = new EthereumTransactionInputDecodingFilterInstruction(
+            transactionInputCriterion,
+            decoding,
+            this.instructionListsStack.peek()
+        );
+
+        this.closeScope(filter);
+    }
+
     private void closeScope(Instruction instruction) {
         this.instructionListsStack.pop();
         if (!this.instructionListsStack.isEmpty()) {
@@ -247,6 +297,7 @@ public class SpecificationComposer {
         TRANSACTION_FILTER,
         LOG_ENTRY_FILTER,
         SMART_CONTRACT_FILTER,
+        TRANSACTION_INPUT_DECODING_FILTER,
         GENERIC_FILTER;
 
         @Override
@@ -262,6 +313,8 @@ public class SpecificationComposer {
                     return "log entry filter";
                 case SMART_CONTRACT_FILTER:
                     return "smart contract filter";
+                case TRANSACTION_INPUT_DECODING_FILTER:
+                    return "transaction input decoding filter";
                 case GENERIC_FILTER:
                     return "generic filter";
                 default:

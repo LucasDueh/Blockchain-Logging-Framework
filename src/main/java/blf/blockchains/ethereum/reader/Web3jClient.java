@@ -10,6 +10,7 @@ import org.web3j.abi.datatypes.Type;
 import org.web3j.protocol.Service;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterNumber;
+
 import org.web3j.protocol.core.methods.request.EthFilter;
 import org.web3j.protocol.core.methods.response.*;
 import org.web3j.protocol.core.methods.response.EthBlock.Block;
@@ -27,7 +28,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 /**
  * Web3jClient
@@ -51,7 +51,8 @@ public class Web3jClient implements EthereumClient {
         this.web3j = Web3j.build(service);
     }
 
-    // TODO: probably not the best solution to have a static function -> rework to make it non-static
+    // TODO: probably not the best solution to have a static function -> rework to
+    // make it non-static
     public static Web3jClient connectWebsocket(String url) {
 
         try {
@@ -68,7 +69,8 @@ public class Web3jClient implements EthereumClient {
         return null;
     }
 
-    // TODO: probably not the best solution to have a static function -> rework to make it non-static
+    // TODO: probably not the best solution to have a static function -> rework to
+    // make it non-static
     public static Web3jClient connectIpc(String path) {
 
         final Service service = createIpcService(path);
@@ -162,10 +164,7 @@ public class Web3jClient implements EthereumClient {
             .createEthCallTransaction(contract, contract, data);
         final DefaultBlockParameterNumber number = new DefaultBlockParameterNumber(block);
         EthCall result = this.web3j.ethCall(tx, number).send();
-        return FunctionReturnDecoder.decode(
-            result.getResult(),
-            returnTypes.stream().map(t -> (TypeReference<Type>) t).collect(Collectors.toList())
-        );
+        return FunctionReturnDecoder.decode(result.getResult(), function.getOutputParameters());
     }
 
     public EthereumBlock queryBlockData(BigInteger blockNumber) {

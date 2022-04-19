@@ -12,7 +12,8 @@ import blf.core.state.ProgramState;
 import blf.library.util.TriFunction;
 
 /**
- * IntegerOperations, serves mostly as a wrapper around {@link java.math.BigInteger} operations.
+ * IntegerOperations, serves mostly as a wrapper around
+ * {@link java.math.BigInteger} operations.
  *
  */
 public class StringOperations {

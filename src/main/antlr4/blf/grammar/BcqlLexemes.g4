@@ -11,13 +11,15 @@ KEY_CONNECTION: C O N N E C T I O N;                                // initiates
 KEY_IPC: I P C;                                                     // initiates the inter process communication setting
 KEY_EMISSION_MODE: E M I S S I O N ' ' M O D E;                     // initiates the emission mode setting
 KEY_ABORT_ON_EXCEPTION: A B O R T ' ' O N ' ' E X C E P T I O N;    // initiates the boolean flag for exception handling
-KEY_ERROR_OUTPUT: E R R O R ' ' O U T P U T; // initiates the output parameter setting
+KEY_ERROR_OUTPUT: E R R O R ' ' O U T P U T; 												// initiates the output parameter setting
 
 KEY_BLOCK_RANGE : B L O C K S;                          // initiates a blockFilter
 KEY_TRANSACTIONS : T R A N S A C T I O N S;             // initiates a transactionFilter
 KEY_SMART_CONTRACT : S M A R T ' ' C O N T R A C T;     // initiates a smartContractFilter
 KEY_LOG_ENTRIES : L O G ' ' E N T R I E S ;             // initiates a logEntryFilter
 KEY_IF : I F;                                           // initiates a smartContractFilter
+
+KEY_TRANSACTION_INPUT: T R A N S A C T I O N ' ' I N P U T ; // initiates a TransactionInputFilter
 
 KEY_EMIT: E M I T;                                      // initiates an emit statements
 KEY_CSV_ROW: C S V ' ' R O W;                           // csv output specification for the emit statement
@@ -173,5 +175,3 @@ fragment LetterOrDigit
 		[\uD800-\uDBFF] [\uDC00-\uDFFF]
 		{Character.isJavaIdentifierPart(Character.toCodePoint((char)_input.LA(-2), (char)_input.LA(-1)))}?
 	;
-
-
