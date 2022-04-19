@@ -18,10 +18,9 @@ public class EthereumTransactionInputDecodingFilterInstruction extends Instructi
     private final EthereumTransactionInputDecoding decoding;
 
     public EthereumTransactionInputDecodingFilterInstruction(
-        @NonNull FilterPredicate<String> transactionInputCriterion,
-        @NonNull EthereumTransactionInputDecoding decoding,
-        List<Instruction> instructions
-    ) {
+            @NonNull FilterPredicate<String> transactionInputCriterion,
+            @NonNull EthereumTransactionInputDecoding decoding,
+            List<Instruction> instructions) {
         super(instructions);
         this.transactionInputCriterion = transactionInputCriterion;
         this.decoding = decoding;
@@ -33,7 +32,7 @@ public class EthereumTransactionInputDecodingFilterInstruction extends Instructi
         final EthereumDataReader ethereumReader = ethereumProgramState.getReader();
 
         String input = ethereumReader.getCurrentTransaction().getInput();
-        String functionIdentifier = input.substring(2, 10);
+        String functionIdentifier = input.substring(0, 10);
 
         if (this.isValidTransactionInput(state, functionIdentifier)) {
             decoding.decode(input, ethereumProgramState);
