@@ -1,6 +1,5 @@
 package blf.configuration;
 
-import blf.blockchains.ethereum.classes.EthereumTransactionInputDecoding;
 import blf.blockchains.ethereum.instructions.EthereumLogEntryFilterInstruction;
 import blf.blockchains.ethereum.instructions.EthereumSmartContractFilterInstruction;
 import blf.blockchains.ethereum.instructions.EthereumTransactionFilterInstruction;
@@ -12,9 +11,6 @@ import blf.core.instructions.Instruction;
 import blf.core.state.ProgramState;
 import blf.core.values.ValueAccessor;
 import blf.core.values.ValueMutator;
-import blf.core.parameters.Parameter;
-
-import blf.core.interfaces.FilterPredicate;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -197,14 +193,7 @@ public class SpecificationComposer {
         this.closeScope(filter);
     }
 
-    public void buildTransactionInputDecodingFilter(
-        ValueAccessorSpecification functionIdentifier,
-        List<ParameterSpecification> inputArguments
-    ) {
-        // TODO: Create TransactionInputDecodingFilterSpecification which contains the
-        // above paramerts
-        // TransactionInputDecodingFilterSpecification specification
-        // specification.getFunctionIdentifier(), specification.getInputArguments()
+    public void buildTransactionInputDecodingFilter(TransactionInputDecodingFilterSpecification specification) {
         final FactoryState statesPeek = this.states.peek();
 
         if (statesPeek != FactoryState.TRANSACTION_INPUT_DECODING_FILTER) {
@@ -217,20 +206,9 @@ public class SpecificationComposer {
             return;
         }
 
-        FilterPredicate<String> transactionInputCriterion = (state, funcIdentifier) -> {
-            final ValueAccessor accessor = functionIdentifier.getValueAccessor();
-            final Object value = accessor.getValue(state);
-            if (value instanceof String) {
-                return funcIdentifier.equals(value);
-            }
-            return false;
-        };
-
-        final List<Parameter> inputs = inputArguments.stream().map(ParameterSpecification::getParameter).collect(Collectors.toList());
-        final EthereumTransactionInputDecoding decoding = new EthereumTransactionInputDecoding(inputs);
         final EthereumTransactionInputDecodingFilterInstruction filter = new EthereumTransactionInputDecodingFilterInstruction(
-            transactionInputCriterion,
-            decoding,
+            specification.getTransactionInputCriterion(),
+            specification.getTransactionInputDecoding(),
             this.instructionListsStack.peek()
         );
 

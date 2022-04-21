@@ -323,11 +323,11 @@ public class EthereumListener extends BaseBlockchainListener {
         LOGGER.info("Build transaction input decoding filter");
         final ValueAccessorSpecification functionIdentifier = this.getValueAccessor(ctx.functionIdentifier);
 
-        final List<ParameterSpecification> inputArgs = ctx.smartContractParameter()
+        final List<ParameterSpecification> inputs = ctx.smartContractParameter()
             .stream()
             .map(this::createParameterSpecification)
             .collect(Collectors.toList());
 
-        this.composer.buildTransactionInputDecodingFilter(functionIdentifier, inputArgs);
+        this.composer.buildTransactionInputDecodingFilter(TransactionInputDecodingFilterSpecification.of(functionIdentifier, inputs));
     }
 }
