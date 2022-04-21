@@ -35,7 +35,7 @@ public class EthereumPublicMemberQueryEthereum implements EthereumSmartContractQ
 
     @Override
     @SuppressWarnings("all")
-    public void query(String contract, EthereumProgramState state) {
+    public void query(String contract, EthereumProgramState state, BigInteger blockOffset) {
 
         final String queryErrorMsg = String.format("Error querying members of smart contract %s.", contract);
         final String contractNullErrorMsg = "Contract is null.";
@@ -55,7 +55,7 @@ public class EthereumPublicMemberQueryEthereum implements EthereumSmartContractQ
 
         try {
             final EthereumClient client = state.getReader().getClient();
-            final BigInteger block = state.getReader().getCurrentBlock().getNumber();
+            final BigInteger block = state.getReader().getCurrentBlock().getNumber() + blockOffset;
             final List<Type> inputs = this.createInputTypes(state);
             final List<TypeReference<?>> outputs = this.createReturnTypes();
             final List<Type> values = client.queryPublicMember(contract, block, this.memberName, inputs, outputs);

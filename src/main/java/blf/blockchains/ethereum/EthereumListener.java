@@ -6,6 +6,7 @@ import blf.blockchains.ethereum.instructions.EthereumConnectIpcInstruction;
 import blf.blockchains.ethereum.state.EthereumProgramState;
 import blf.configuration.*;
 import blf.core.exceptions.ExceptionHandler;
+import blf.core.values.ValueAccessor;
 import blf.grammar.BcqlParser;
 import blf.parsing.VariableExistenceListener;
 import blf.util.TypeUtils;
@@ -250,7 +251,7 @@ public class EthereumListener extends BaseBlockchainListener {
     }
 
     private void buildSmartContractFilter(BcqlParser.SmartContractFilterContext ctx) {
-        final ValueAccessorSpecification contractAddress = this.getValueAccessor(ctx.valueExpression());
+        final ValueAccessorSpecification contractAddress = this.getValueAccessor(ctx.contractAddress);
 
         final List<SmartContractQuerySpecification> queries = new ArrayList<>();
         for (BcqlParser.SmartContractQueryContext scQuery : ctx.smartContractQuery()) {
@@ -263,7 +264,13 @@ public class EthereumListener extends BaseBlockchainListener {
             }
         }
 
-        this.composer.buildSmartContractFilter(SmartContractFilterSpecification.of(contractAddress, queries));
+        if(ctx.blockOffset != null) {
+            final ValueAccessorSpecification blockOffset = this.getValueAccessor(ctx.blockOffset);
+            final ValueAccessor blockOffsetValue = blockOffset.getValueAccessor();
+            this.composer.buildSmartContractFilter(SmartContractFilterSpecification.of(contractAddress, queries, blockOffset));
+        } else {
+            this.composer.buildSmartContractFilter(SmartContractFilterSpecification.of(contractAddress, queries));
+        }
     }
 
     private SmartContractQuerySpecification handlePublicFunctionQuery(BcqlParser.PublicFunctionQueryContext ctx) {
