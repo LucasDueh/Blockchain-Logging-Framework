@@ -10,7 +10,6 @@ import blf.core.values.ValueAccessor;
 import blf.core.parameters.Parameter;
 import blf.core.interfaces.FilterPredicate;
 
-
 /**
  * TransactionInputDecodingFilterSpecification
  */
@@ -19,15 +18,15 @@ public class TransactionInputDecodingFilterSpecification {
     private final FilterPredicate<String> transactionInputCriterion;
 
     private TransactionInputDecodingFilterSpecification(ValueAccessor functionIdentifier, List<Parameter> inputs) {
-      this.decoding = new EthereumTransactionInputDecoding(inputs);
-      this.transactionInputCriterion = (state, funcIdentifier) -> {
-        final ValueAccessor accessor = functionIdentifier;
-        final Object value = accessor.getValue(state);
-        if (value instanceof String) {
-            return funcIdentifier.equals(value);
-        }
-        return false;
-      };
+        this.decoding = new EthereumTransactionInputDecoding(inputs);
+        this.transactionInputCriterion = (state, funcIdentifier) -> {
+            final ValueAccessor accessor = functionIdentifier;
+            final Object value = accessor.getValue(state);
+            if (value instanceof String) {
+                return funcIdentifier.equals(value);
+            }
+            return false;
+        };
     }
 
     public EthereumTransactionInputDecoding getTransactionInputDecoding() {
@@ -35,10 +34,13 @@ public class TransactionInputDecodingFilterSpecification {
     }
 
     public FilterPredicate<String> getTransactionInputCriterion() {
-      return this.transactionInputCriterion;
+        return this.transactionInputCriterion;
     }
 
-    public static TransactionInputDecodingFilterSpecification of(ValueAccessorSpecification functionIdentifier, List<ParameterSpecification> inputs) {
+    public static TransactionInputDecodingFilterSpecification of(
+        ValueAccessorSpecification functionIdentifier,
+        List<ParameterSpecification> inputs
+    ) {
         final List<Parameter> inputParameters = inputs.stream().map(ParameterSpecification::getParameter).collect(Collectors.toList());
         return new TransactionInputDecodingFilterSpecification(functionIdentifier.getValueAccessor(), inputParameters);
     }

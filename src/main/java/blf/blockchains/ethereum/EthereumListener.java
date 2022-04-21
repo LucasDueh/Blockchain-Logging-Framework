@@ -327,7 +327,7 @@ public class EthereumListener extends BaseBlockchainListener {
             .stream()
             .map(this::createParameterSpecification)
             .collect(Collectors.toList());
-            
+
         this.composer.buildTransactionInputDecodingFilter(TransactionInputDecodingFilterSpecification.of(functionIdentifier, inputs));
     }
 }
