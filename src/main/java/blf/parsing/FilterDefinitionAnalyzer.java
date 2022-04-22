@@ -1,16 +1,14 @@
 package blf.parsing;
 
+import blf.grammar.BcqlParser;
+import blf.parsing.BlockNumber.Type;
+import blf.util.TypeUtils;
+import io.reactivex.annotations.NonNull;
 import java.math.BigInteger;
 import java.util.Set;
 import java.util.Stack;
-
-import blf.grammar.BcqlParser;
-import blf.util.TypeUtils;
-import io.reactivex.annotations.NonNull;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.TerminalNode;
-
-import blf.parsing.BlockNumber.Type;
 
 /**
  * FilterDefinitionAnalyzer
@@ -326,10 +324,21 @@ public class FilterDefinitionAnalyzer extends SemanticAnalyzer {
     @Override
     public void enterTransactionInputDecodingFilter(BcqlParser.TransactionInputDecodingFilterContext ctx) {
         final int funcIdentifierBytesLength = 4;
+        boolean isErroreous = false;
 
-        final String functionIdentifier = InterpreterUtils.determineType(ctx.functionIdentifier, this.variableAnalyzer);
-        if (!TypeUtils.isBytesLiteral(functionIdentifier, funcIdentifierBytesLength)) {
-            this.addError(ctx.functionIdentifier.start, "Transaction input function identifier must be of bytes type.");
+        if (ctx.functionIdentifier.literal() != null) {
+            if (!TypeUtils.isBytesLiteral(ctx.functionIdentifier.literal().getText(), funcIdentifierBytesLength)) {
+                isErroreous = true;
+            }
+        } else {
+            isErroreous = true;
+        }
+
+        if (isErroreous) {
+            this.addError(
+                ctx.functionIdentifier.start,
+                "Transaction input function identifier must be a literal of bytes type with length 4."
+            );
         }
     }
 
