@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import com.google.protobuf.Value;
+
 public class EthereumListener extends BaseBlockchainListener {
     private static final Logger LOGGER = Logger.getLogger(EthereumListener.class.getName());
 
@@ -264,9 +266,9 @@ public class EthereumListener extends BaseBlockchainListener {
             }
         }
 
-        if(ctx.blockOffset != null) {
-            final ValueAccessorSpecification blockOffset = this.getValueAccessor(ctx.blockOffset);
-            final ValueAccessor blockOffsetValue = blockOffset.getValueAccessor();
+        if (ctx.blockOffset != null) {
+            final ValueAccessorSpecification blockOffsetVA = this.getValueAccessor(ctx.blockOffset);
+            final BigInteger blockOffset = (BigInteger) blockOffsetVA.getValueAccessor().getValue(this.state);
             this.composer.buildSmartContractFilter(SmartContractFilterSpecification.of(contractAddress, queries, blockOffset));
         } else {
             this.composer.buildSmartContractFilter(SmartContractFilterSpecification.of(contractAddress, queries));

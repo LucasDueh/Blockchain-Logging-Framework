@@ -55,7 +55,7 @@ public class EthereumPublicMemberQueryEthereum implements EthereumSmartContractQ
 
         try {
             final EthereumClient client = state.getReader().getClient();
-            final BigInteger block = state.getReader().getCurrentBlock().getNumber() + blockOffset;
+            final BigInteger block = state.getReader().getCurrentBlock().getNumber().add(blockOffset);
             final List<Type> inputs = this.createInputTypes(state);
             final List<TypeReference<?>> outputs = this.createReturnTypes();
             final List<Type> values = client.queryPublicMember(contract, block, this.memberName, inputs, outputs);

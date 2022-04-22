@@ -17,12 +17,12 @@ import java.util.List;
 public class EthereumSmartContractFilterInstruction extends Instruction {
     private final List<EthereumSmartContractQuery> queries;
     private final ValueAccessor contractAddress;
-    private final ValueAccessor blockOffset;
+    private final BigInteger blockOffset;
 
     public EthereumSmartContractFilterInstruction(
         @NonNull ValueAccessor contractAddress,
         @NonNull List<EthereumSmartContractQuery> queries,
-        @NonNull ValueAccessor blockOffset,
+        @NonNull BigInteger blockOffset,
         List<Instruction> instructions
     ) {
         super(instructions);
@@ -36,7 +36,6 @@ public class EthereumSmartContractFilterInstruction extends Instruction {
         final EthereumProgramState ethereumProgramState = (EthereumProgramState) state;
 
         final String address = (String) this.contractAddress.getValue(state);
-        final BigInteger blockOffset = (BigInteger) this.blockOffset.getValue(state);
 
         for (EthereumSmartContractQuery query : this.queries) {
             query.query(address, ethereumProgramState, blockOffset);

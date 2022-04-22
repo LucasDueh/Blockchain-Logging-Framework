@@ -14,9 +14,13 @@ import blf.core.values.ValueAccessor;
 public class SmartContractFilterSpecification {
     private final List<EthereumSmartContractQuery> queries;
     private final ValueAccessor contractAddress;
-    private final ValueAccessor blockOffset;
+    private final BigInteger blockOffset;
 
-    private SmartContractFilterSpecification(ValueAccessor contractAddress, List<EthereumSmartContractQuery> queries, ValueAccessor blockOffset) {
+    private SmartContractFilterSpecification(
+        ValueAccessor contractAddress,
+        List<EthereumSmartContractQuery> queries,
+        BigInteger blockOffset
+    ) {
         this.contractAddress = contractAddress;
         this.queries = queries;
         this.blockOffset = blockOffset;
@@ -30,24 +34,27 @@ public class SmartContractFilterSpecification {
         return this.queries;
     }
 
-    ValueAccessor getBlockOffset() {
+    BigInteger getBlockOffset() {
         return this.blockOffset;
     }
 
     public static SmartContractFilterSpecification of(ValueAccessorSpecification contractAddress, SmartContractQuerySpecification queries)
         throws BuildException {
-        return of(contractAddress, Arrays.asList(queries), null);
+        return of(contractAddress, Arrays.asList(queries), BigInteger.valueOf(0));
     }
 
-    public static SmartContractFilterSpecification of(ValueAccessorSpecification contractAddress, SmartContractQuerySpecification queries, ValueAccessor blockOffset)
-        throws BuildException {
+    public static SmartContractFilterSpecification of(
+        ValueAccessorSpecification contractAddress,
+        SmartContractQuerySpecification queries,
+        BigInteger blockOffset
+    ) throws BuildException {
         return of(contractAddress, Arrays.asList(queries), blockOffset);
     }
 
     public static SmartContractFilterSpecification of(
         ValueAccessorSpecification contractAddress,
         List<SmartContractQuerySpecification> querySpecs,
-        ValueAccessor blockOffset
+        BigInteger blockOffset
     ) {
         final ArrayList<EthereumSmartContractQuery> queries = new ArrayList<>();
         for (SmartContractQuerySpecification querySpec : querySpecs) {
