@@ -38,11 +38,6 @@ public class SmartContractFilterSpecification {
         return this.blockOffset;
     }
 
-    public static SmartContractFilterSpecification of(ValueAccessorSpecification contractAddress, SmartContractQuerySpecification queries)
-        throws BuildException {
-        return of(contractAddress, Arrays.asList(queries), BigInteger.valueOf(0));
-    }
-
     public static SmartContractFilterSpecification of(
         ValueAccessorSpecification contractAddress,
         SmartContractQuerySpecification queries,

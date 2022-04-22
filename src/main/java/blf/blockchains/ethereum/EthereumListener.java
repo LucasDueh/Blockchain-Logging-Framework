@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.math.BigInteger;
 
 import com.google.protobuf.Value;
 
@@ -271,7 +272,7 @@ public class EthereumListener extends BaseBlockchainListener {
             final BigInteger blockOffset = (BigInteger) blockOffsetVA.getValueAccessor().getValue(this.state);
             this.composer.buildSmartContractFilter(SmartContractFilterSpecification.of(contractAddress, queries, blockOffset));
         } else {
-            this.composer.buildSmartContractFilter(SmartContractFilterSpecification.of(contractAddress, queries));
+            this.composer.buildSmartContractFilter(SmartContractFilterSpecification.of(contractAddress, queries, BigInteger.valueOf(0)));
         }
     }
 
