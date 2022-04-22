@@ -320,4 +320,18 @@ public class FilterDefinitionAnalyzer extends SemanticAnalyzer {
     }
 
     // #endregion Smart contract filter
+
+    // #region transaction input decoding filter
+
+    @Override
+    public void enterTransactionInputDecodingFilter(BcqlParser.TransactionInputDecodingFilterContext ctx) {
+        final int funcIdentifierBytesLength = 4;
+
+        final String functionIdentifier = InterpreterUtils.determineType(ctx.functionIdentifier, this.variableAnalyzer);
+        if (!TypeUtils.isBytesLiteral(functionIdentifier, funcIdentifierBytesLength)) {
+            this.addError(ctx.functionIdentifier.start, "Transaction input function identifier must be of bytes type.");
+        }
+    }
+
+    // #endregion transaction input decoding filter
 }
