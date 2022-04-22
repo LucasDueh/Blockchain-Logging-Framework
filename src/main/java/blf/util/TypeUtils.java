@@ -141,7 +141,7 @@ public class TypeUtils {
         return literal != null && (literal.toLowerCase().equals("true") || literal.toLowerCase().equals("false"));
     }
 
-    private static final String INT_PATTERN = "[0]|[1-9][0-9]*";
+    private static final String INT_PATTERN = "[0]|[-]?[1-9][0-9]*";
 
     public static boolean isIntLiteral(String literal) {
         return literal != null && literal.matches(INT_PATTERN);

@@ -48,7 +48,11 @@ public class SpecificationComposer {
     }
 
     public void prepareSmartContractFilterBuild() {
-        this.prepareBuild(FactoryState.SMART_CONTRACT_FILTER, FactoryState.BLOCK_RANGE_FILTER);
+        this.prepareBuild(
+            FactoryState.SMART_CONTRACT_FILTER,
+            FactoryState.BLOCK_RANGE_FILTER,
+            FactoryState.TRANSACTION_INPUT_DECODING_FILTER
+        );
     }
 
     public void prepareTransactionInputDecodingFilterBuild() {
@@ -187,6 +191,7 @@ public class SpecificationComposer {
         final EthereumSmartContractFilterInstruction filter = new EthereumSmartContractFilterInstruction(
             specification.getContractAddress(),
             specification.getQueries(),
+            specification.getBlockOffset(),
             this.instructionListsStack.peek()
         );
 

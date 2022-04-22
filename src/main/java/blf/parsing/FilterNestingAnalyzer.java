@@ -126,7 +126,8 @@ public class FilterNestingAnalyzer extends SemanticAnalyzer {
     }
 
     private static boolean areSmartContractFilterParentsValid(Stack<String> stack) {
-        return !stack.isEmpty() && stack.peek().equals(BLOCK_FILTER);
+        boolean isValidParent = stack.peek().equals(BLOCK_FILTER) || stack.peek().equals(TRANSACTION_INPUT_DECODING_FILTER);
+        return !stack.isEmpty() && isValidParent;
     }
 
     private static boolean areTransactionInputDecodingFilterParentsValid(Stack<String> stack) {

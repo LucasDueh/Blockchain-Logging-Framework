@@ -133,6 +133,7 @@ logEntryFilter
 
 smartContractFilter
     : KEY_SMART_CONTRACT '(' contractAddress=valueExpression ')' ('(' smartContractQuery ')')+
+    | KEY_SMART_CONTRACT '(' blockOffset=valueExpression ')' '(' contractAddress=valueExpression ')' ('(' smartContractQuery ')')+
     ;
 
 

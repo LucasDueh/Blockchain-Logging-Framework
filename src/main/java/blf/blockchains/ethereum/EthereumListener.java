@@ -6,6 +6,7 @@ import blf.blockchains.ethereum.instructions.EthereumConnectIpcInstruction;
 import blf.blockchains.ethereum.state.EthereumProgramState;
 import blf.configuration.*;
 import blf.core.exceptions.ExceptionHandler;
+import blf.core.values.ValueAccessor;
 import blf.grammar.BcqlParser;
 import blf.parsing.VariableExistenceListener;
 import blf.util.TypeUtils;
@@ -16,6 +17,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.math.BigInteger;
+
+import com.google.protobuf.Value;
 
 public class EthereumListener extends BaseBlockchainListener {
     private static final Logger LOGGER = Logger.getLogger(EthereumListener.class.getName());
@@ -250,7 +254,7 @@ public class EthereumListener extends BaseBlockchainListener {
     }
 
     private void buildSmartContractFilter(BcqlParser.SmartContractFilterContext ctx) {
-        final ValueAccessorSpecification contractAddress = this.getValueAccessor(ctx.valueExpression());
+        final ValueAccessorSpecification contractAddress = this.getValueAccessor(ctx.contractAddress);
 
         final List<SmartContractQuerySpecification> queries = new ArrayList<>();
         for (BcqlParser.SmartContractQueryContext scQuery : ctx.smartContractQuery()) {
@@ -263,7 +267,13 @@ public class EthereumListener extends BaseBlockchainListener {
             }
         }
 
-        this.composer.buildSmartContractFilter(SmartContractFilterSpecification.of(contractAddress, queries));
+        if (ctx.blockOffset != null) {
+            final ValueAccessorSpecification blockOffsetVA = this.getValueAccessor(ctx.blockOffset);
+            final BigInteger blockOffset = (BigInteger) blockOffsetVA.getValueAccessor().getValue(this.state);
+            this.composer.buildSmartContractFilter(SmartContractFilterSpecification.of(contractAddress, queries, blockOffset));
+        } else {
+            this.composer.buildSmartContractFilter(SmartContractFilterSpecification.of(contractAddress, queries, BigInteger.valueOf(0)));
+        }
     }
 
     private SmartContractQuerySpecification handlePublicFunctionQuery(BcqlParser.PublicFunctionQueryContext ctx) {

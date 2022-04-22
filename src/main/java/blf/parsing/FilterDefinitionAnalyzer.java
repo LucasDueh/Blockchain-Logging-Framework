@@ -285,13 +285,24 @@ public class FilterDefinitionAnalyzer extends SemanticAnalyzer {
 
     @Override
     public void enterSmartContractFilter(BcqlParser.SmartContractFilterContext ctx) {
-        final String type = InterpreterUtils.determineType(ctx.valueExpression(), this.variableAnalyzer);
-        if (type == null) {
+        final String addressType = InterpreterUtils.determineType(ctx.contractAddress, this.variableAnalyzer);
+        if (addressType == null) {
             return;
         }
 
-        if (!(TypeUtils.isAddressType(type) || TypeUtils.isStringType(type))) {
-            this.addError(ctx.valueExpression().start, "Smart contract address must be of address or string type.");
+        if (!(TypeUtils.isAddressType(addressType) || TypeUtils.isStringType(addressType))) {
+            this.addError(ctx.contractAddress.start, "Smart contract address must be of address or string type.");
+        }
+
+        if (ctx.blockOffset != null) {
+            final String blockOffsetType = InterpreterUtils.determineType(ctx.blockOffset, this.variableAnalyzer);
+            if (blockOffsetType == null) {
+                return;
+            }
+
+            if (!TypeUtils.isIntegerType(blockOffsetType)) {
+                this.addError(ctx.blockOffset.start, "Smart contract block offset must be of int type.");
+            }
         }
     }
 
