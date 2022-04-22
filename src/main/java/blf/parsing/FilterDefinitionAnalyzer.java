@@ -324,7 +324,7 @@ public class FilterDefinitionAnalyzer extends SemanticAnalyzer {
     // #region transaction input decoding filter
 
     @Override
-    public void enterTransactionInputDecodingFilter(BcqlParser.TransactionInputDecodingFilterContext ctx) { 
+    public void enterTransactionInputDecodingFilter(BcqlParser.TransactionInputDecodingFilterContext ctx) {
         final int funcIdentifierBytesLength = 4;
 
         final String functionIdentifier = InterpreterUtils.determineType(ctx.functionIdentifier, this.variableAnalyzer);
