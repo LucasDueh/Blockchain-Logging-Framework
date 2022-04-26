@@ -1,20 +1,19 @@
 package blf.parsing;
 
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import blf.blockchains.ethereum.state.EthereumProgramState;
 import blf.configuration.BaseBlockchainListener;
 import blf.grammar.BcqlBaseListener;
 import blf.grammar.BcqlListener;
 import blf.grammar.BcqlParser;
-import blf.util.RootListenerException;
 import blf.util.RootListener;
+import blf.util.RootListenerException;
 import io.reactivex.annotations.NonNull;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
+
 
 /**
  * SemanticAnalysis

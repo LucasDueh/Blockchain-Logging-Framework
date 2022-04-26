@@ -1,14 +1,12 @@
 package blf.configuration;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import blf.blockchains.ethereum.classes.EthereumTransactionInputDecoding;
+import blf.core.interfaces.FilterPredicate;
+import blf.core.parameters.Parameter;
+import blf.core.values.ValueAccessor;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import blf.blockchains.ethereum.classes.EthereumTransactionInputDecoding;
-import blf.core.values.ValueAccessor;
-import blf.core.parameters.Parameter;
-import blf.core.interfaces.FilterPredicate;
 
 /**
  * TransactionInputDecodingFilterSpecification

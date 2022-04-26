@@ -1,13 +1,12 @@
 package blf;
 
 import blf.util.RootListenerException;
-
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
-import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+
 
 public class BlfApp {
     private static final int INDEX_CMD = 0;

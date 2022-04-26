@@ -1,23 +1,18 @@
 package blf.blockchains.ethereum.classes;
 
-import blf.blockchains.ethereum.reader.EthereumDataReader;
-import blf.blockchains.ethereum.reader.EthereumTransaction;
-import blf.blockchains.ethereum.reader.EthereumClient;
 import blf.blockchains.ethereum.state.EthereumProgramState;
 import blf.core.exceptions.ExceptionHandler;
 import blf.core.parameters.Parameter;
 import io.reactivex.annotations.NonNull;
-import org.web3j.abi.TypeDecoder;
-import org.web3j.abi.TypeReference;
-import org.web3j.abi.datatypes.Type;
-import org.web3j.abi.FunctionReturnDecoder;
-
-import static org.web3j.abi.Utils.convert;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import org.web3j.abi.FunctionReturnDecoder;
+import org.web3j.abi.TypeReference;
+import org.web3j.abi.datatypes.Type;
+
+import static org.web3j.abi.Utils.convert;
+
 
 /**
  * TransactionInputDecoding
