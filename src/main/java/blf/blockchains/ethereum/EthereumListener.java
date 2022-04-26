@@ -6,20 +6,16 @@ import blf.blockchains.ethereum.instructions.EthereumConnectIpcInstruction;
 import blf.blockchains.ethereum.state.EthereumProgramState;
 import blf.configuration.*;
 import blf.core.exceptions.ExceptionHandler;
-import blf.core.values.ValueAccessor;
 import blf.grammar.BcqlParser;
 import blf.parsing.VariableExistenceListener;
 import blf.util.TypeUtils;
-import org.antlr.v4.runtime.tree.ParseTree;
-
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import java.math.BigInteger;
-
-import com.google.protobuf.Value;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 public class EthereumListener extends BaseBlockchainListener {
     private static final Logger LOGGER = Logger.getLogger(EthereumListener.class.getName());

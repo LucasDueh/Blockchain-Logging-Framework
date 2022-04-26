@@ -1,18 +1,14 @@
 package blf.blockchains.template.instructions;
 
 import blf.blockchains.template.TemplateProgramState;
-import blf.core.exceptions.ExceptionHandler;
 import blf.core.instructions.BlockInstruction;
 import blf.core.instructions.Instruction;
 import blf.core.state.ProgramState;
-import blf.core.values.ValueStore;
 import blf.grammar.BcqlParser;
-import org.antlr.v4.runtime.misc.Pair;
-
 import java.math.BigInteger;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.logging.Logger;
+import org.antlr.v4.runtime.misc.Pair;
 
 /**
  * This class handles the 'BLOCKS (fromBlock) (toBlock)' filter of the .bcql file.
