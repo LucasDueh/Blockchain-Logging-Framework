@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
-
 public class BlfApp {
     private static final int INDEX_CMD = 0;
     private static final int INDEX_PATH = 1;

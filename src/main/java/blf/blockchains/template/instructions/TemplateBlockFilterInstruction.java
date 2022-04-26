@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.logging.Logger;
 import org.antlr.v4.runtime.misc.Pair;
 
-
 /**
  * This class handles the 'BLOCKS (fromBlock) (toBlock)' filter of the .bcql file.
  */

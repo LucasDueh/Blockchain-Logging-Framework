@@ -17,7 +17,6 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-
 public class EthereumListener extends BaseBlockchainListener {
     private static final Logger LOGGER = Logger.getLogger(EthereumListener.class.getName());
 

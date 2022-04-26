@@ -7,7 +7,6 @@ import blf.core.values.ValueAccessor;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 /**
  * TransactionInputDecodingFilterSpecification
  */

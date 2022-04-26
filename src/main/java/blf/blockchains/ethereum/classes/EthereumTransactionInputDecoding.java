@@ -13,7 +13,6 @@ import org.web3j.abi.datatypes.Type;
 
 import static org.web3j.abi.Utils.convert;
 
-
 /**
  * TransactionInputDecoding
  */
