@@ -72,7 +72,8 @@ public class TypeUtils {
     }
 
     public static boolean isAddressType(String solType) {
-        return solType != null && (solType.equals(ADDRESS_TYPE_KEYWORD) || solType.equals(ADDRESS_TYPE_ALIAS_KEYWORD));
+        return solType != null
+            && (solType.equals(ADDRESS_TYPE_KEYWORD) || solType.equals(ADDRESS_TYPE_ALIAS_KEYWORD) || solType.equals(BYTES_TYPE_KEYWORD));
     }
 
     public static boolean isBooleanType(String solType) {
