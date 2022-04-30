@@ -116,7 +116,9 @@ public class FilterDefinitionAnalyzer extends SemanticAnalyzer {
             this.verifyAddressList(ctx.senders);
         }
 
-        this.verifyAddressList(ctx.recipients);
+        if (ctx.recipients != null) {
+            this.verifyAddressList(ctx.recipients);
+        }
     }
 
     private void verifyAddressList(final BcqlParser.AddressListContext ctx) {

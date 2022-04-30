@@ -110,7 +110,7 @@ blockFilter
     optional sending addressList and an mandatory recipients addressList, each inside of () braces. */
 
 transactionFilter
-    : KEY_TRANSACTIONS '(' (senders=addressList)? ')' '(' recipients=addressList ')'
+    : KEY_TRANSACTIONS '(' (senders=addressList)? ')' '(' (recipients=addressList)? ')'
     ;
 
 
