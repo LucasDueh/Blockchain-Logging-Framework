@@ -26,7 +26,7 @@ public class EthereumTransactionInput {
     @SuppressWarnings("all")
     public void decode(String input, EthereumProgramState state) {
 
-        final String queryErrorMsg = "Error decoding input arguments.";
+        final String decodeErrorMsg = "Error decoding input arguments.";
         final String txInputEmptyErrorMsg = "Transaction input does not hold arguments.";
         final String stateNullErrorMsg = "State is null.";
 
@@ -56,7 +56,7 @@ public class EthereumTransactionInput {
         } catch (java.lang.StringIndexOutOfBoundsException ex) {
             ExceptionHandler.getInstance().handleException(txInputEmptyErrorMsg, ex);
         } catch (Throwable cause) {
-            ExceptionHandler.getInstance().handleException(queryErrorMsg, cause);
+            ExceptionHandler.getInstance().handleException(decodeErrorMsg, cause);
         }
     }
 
