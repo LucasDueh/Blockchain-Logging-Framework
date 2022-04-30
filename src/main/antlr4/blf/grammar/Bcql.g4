@@ -88,7 +88,7 @@ filter
     | logEntryFilter
     | smartContractFilter
     | genericFilter
-    | transactionInputDecodingFilter
+    | transactionInputFilter
     ;
 
 
@@ -110,7 +110,7 @@ blockFilter
     optional sending addressList and an mandatory recipients addressList, each inside of () braces. */
 
 transactionFilter
-    : KEY_TRANSACTIONS '(' (senders=addressList)? ')' '(' recipients=addressList ')'
+    : KEY_TRANSACTIONS '(' (senders=addressList)? ')' '(' (recipients=addressList)? ')'
     ;
 
 
@@ -147,14 +147,12 @@ genericFilter
     ;
 
 
-//      DECODING: Primary grammar rules to specify the decoding of Ethereum-related blockchain data
-
-/** A transactionInputDecodingFilter consists of 
-    the encoded function identifier that is used as a filter predicte and
+/** A transactionInputFilter consists of 
+    the sender contract address, the encoded function identifier that is used as a filter predicte and
     at least one smartContractParameter (divided by ','), defining the decoded input parameters of the respective function*/
 
-transactionInputDecodingFilter
-    : KEY_TRANSACTION_INPUT '(' functionIdentifier=valueExpression ')' '(' smartContractParameter (',' smartContractParameter)* ')'
+transactionInputFilter
+    : KEY_TRANSACTION_INPUT '(' addressList ')' '(' functionIdentifier=valueExpression ')' '(' smartContractParameter (',' smartContractParameter)* ')'
     ;
 
 

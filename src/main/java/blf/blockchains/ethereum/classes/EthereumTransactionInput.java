@@ -14,19 +14,20 @@ import org.web3j.abi.datatypes.Type;
 import static org.web3j.abi.Utils.convert;
 
 /**
- * TransactionInputDecoding
+ * TransactionInput
  */
-public class EthereumTransactionInputDecoding {
+public class EthereumTransactionInput {
     private final List<Parameter> inputArguments;
 
-    public EthereumTransactionInputDecoding(@NonNull List<Parameter> inputArguments) {
+    public EthereumTransactionInput(@NonNull List<Parameter> inputArguments) {
         this.inputArguments = new ArrayList<>(inputArguments);
     }
 
     @SuppressWarnings("all")
     public void decode(String input, EthereumProgramState state) {
 
-        final String queryErrorMsg = "Error decoding input arguments.";
+        final String decodeErrorMsg = "Error decoding input arguments.";
+        final String txInputEmptyErrorMsg = "Transaction input does not hold arguments.";
         final String stateNullErrorMsg = "State is null.";
 
         if (state == null) {
@@ -35,10 +36,10 @@ public class EthereumTransactionInputDecoding {
             return;
         }
 
-        try {
-            final List<TypeReference<?>> inputTypeReferences = this.createInputTypes();
-            assert inputTypeReferences.size() == this.inputArguments.size();
+        final List<TypeReference<?>> inputTypeReferences = this.createInputTypes();
+        assert inputTypeReferences.size() == this.inputArguments.size();
 
+        try {
             String encodedInputArgs = input.substring(10);
             final List<Object> results = FunctionReturnDecoder.decode(encodedInputArgs, convert(inputTypeReferences))
                 .stream()
@@ -52,48 +53,14 @@ public class EthereumTransactionInputDecoding {
                 Object value = results.get(i);
                 state.getValueStore().setValue(nameOfVariable, value);
             }
+        } catch (java.lang.StringIndexOutOfBoundsException ex) {
+            ExceptionHandler.getInstance().handleException(txInputEmptyErrorMsg, ex);
         } catch (Throwable cause) {
-            ExceptionHandler.getInstance().handleException(queryErrorMsg, cause);
+            ExceptionHandler.getInstance().handleException(decodeErrorMsg, cause);
         }
     }
 
     private List<TypeReference<?>> createInputTypes() {
         return this.inputArguments.stream().map(Parameter::getType).collect(Collectors.toList());
     }
-
-    // @SuppressWarnings("all")
-    // private void setValues(List<Type> values, EthereumProgramState state) {
-    // if (!this.matchOutputParameters(values)) {
-    // throw new IllegalArgumentException("Output parameters not compatible with
-    // return values.");
-    // }
-
-    // IntStream.range(0, values.size()).forEach(i -> {
-    // final Object value = values.get(i).getValue();
-    // final String name = this.inputArguments.get(i).getName();
-    // state.getValueStore().setValue(name, value);
-    // });
-    // }
-
-    // @SuppressWarnings("all")
-    // private boolean matchOutputParameters(List<Type> values) {
-    // if (values.size() != this.inputArguments.size()) {
-    // return false;
-    // }
-
-    // return IntStream.range(0, values.size()).allMatch(i ->
-    // typesMatch(values.get(i), this.inputArguments.get(i)));
-    // }
-
-    // @SuppressWarnings("all")
-    // private boolean typesMatch(Type type, Parameter parameter) {
-    // if (type == null) {
-    // return false;
-    // }
-    // try {
-    // return parameter.getType().getClassType().equals(type.getClass());
-    // } catch (Throwable cause) {
-    // return false;
-    // }
-    // }
 }

@@ -5,16 +5,15 @@ import blf.core.exceptions.ExceptionHandler;
 import blf.grammar.BcqlBaseListener;
 import blf.grammar.BcqlListener;
 import blf.grammar.BcqlParser.*;
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.tree.ErrorNode;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.antlr.v4.runtime.tree.TerminalNode;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.logging.Logger;
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ErrorNode;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 /**
  * Forwards callbacks from ParseTreeWalker to every added BcqlListener.
@@ -256,13 +255,13 @@ public class RootListener implements BcqlListener {
     }
 
     @Override
-    public void enterTransactionInputDecodingFilter(TransactionInputDecodingFilterContext ctx) {
-        this.notifyListener(BcqlListener::enterTransactionInputDecodingFilter, ctx);
+    public void enterTransactionInputFilter(TransactionInputFilterContext ctx) {
+        this.notifyListener(BcqlListener::enterTransactionInputFilter, ctx);
     }
 
     @Override
-    public void exitTransactionInputDecodingFilter(TransactionInputDecodingFilterContext ctx) {
-        this.notifyListener(BcqlListener::exitTransactionInputDecodingFilter, ctx);
+    public void exitTransactionInputFilter(TransactionInputFilterContext ctx) {
+        this.notifyListener(BcqlListener::exitTransactionInputFilter, ctx);
     }
 
     @Override

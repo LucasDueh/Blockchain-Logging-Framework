@@ -116,7 +116,9 @@ public class FilterDefinitionAnalyzer extends SemanticAnalyzer {
             this.verifyAddressList(ctx.senders);
         }
 
-        this.verifyAddressList(ctx.recipients);
+        if (ctx.recipients != null) {
+            this.verifyAddressList(ctx.recipients);
+        }
     }
 
     private void verifyAddressList(final BcqlParser.AddressListContext ctx) {
@@ -319,10 +321,10 @@ public class FilterDefinitionAnalyzer extends SemanticAnalyzer {
 
     // #endregion Smart contract filter
 
-    // #region transaction input decoding filter
+    // #region transaction input filter
 
     @Override
-    public void enterTransactionInputDecodingFilter(BcqlParser.TransactionInputDecodingFilterContext ctx) {
+    public void enterTransactionInputFilter(BcqlParser.TransactionInputFilterContext ctx) {
         final int funcIdentifierBytesLength = 4;
         boolean isErroreous = false;
 
@@ -342,5 +344,10 @@ public class FilterDefinitionAnalyzer extends SemanticAnalyzer {
         }
     }
 
-    // #endregion transaction input decoding filter
+    @Override
+    public void exitTransactionInputFilter(final BcqlParser.TransactionInputFilterContext ctx) {
+        this.verifyAddressList(ctx.addressList());
+    }
+
+    // #endregion transaction input filter
 }

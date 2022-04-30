@@ -1,30 +1,30 @@
 package blf.blockchains.ethereum.instructions;
 
-import blf.blockchains.ethereum.classes.EthereumTransactionInputDecoding;
+import blf.blockchains.ethereum.classes.EthereumTransactionInput;
 import blf.blockchains.ethereum.reader.EthereumDataReader;
 import blf.blockchains.ethereum.state.EthereumProgramState;
-import blf.core.state.ProgramState;
+import blf.core.exceptions.ExceptionHandler;
 import blf.core.instructions.Instruction;
 import blf.core.interfaces.FilterPredicate;
+import blf.core.state.ProgramState;
 import io.reactivex.annotations.NonNull;
-
 import java.util.List;
 
 /**
- * Transaction Input Decoding Scope
+ * Transaction Input Scope
  */
-public class EthereumTransactionInputDecodingFilterInstruction extends Instruction {
+public class EthereumTransactionInputFilterInstruction extends Instruction {
     private final FilterPredicate<String> transactionInputCriterion;
-    private final EthereumTransactionInputDecoding decoding;
+    private final EthereumTransactionInput transactionInput;
 
-    public EthereumTransactionInputDecodingFilterInstruction(
+    public EthereumTransactionInputFilterInstruction(
         @NonNull FilterPredicate<String> transactionInputCriterion,
-        @NonNull EthereumTransactionInputDecoding decoding,
+        @NonNull EthereumTransactionInput transactionInput,
         List<Instruction> instructions
     ) {
         super(instructions);
         this.transactionInputCriterion = transactionInputCriterion;
-        this.decoding = decoding;
+        this.transactionInput = transactionInput;
     }
 
     @Override
@@ -32,13 +32,19 @@ public class EthereumTransactionInputDecodingFilterInstruction extends Instructi
         final EthereumProgramState ethereumProgramState = (EthereumProgramState) state;
         final EthereumDataReader ethereumReader = ethereumProgramState.getReader();
 
+        final String txInputEmptyErrorMsg = "Transaction input is not specified.";
+
         String input = ethereumReader.getCurrentTransaction().getInput();
-        String functionIdentifier = input.substring(0, 10);
+        try {
+            String functionIdentifier = input.substring(0, 10);
 
-        if (this.isValidTransactionInput(state, functionIdentifier)) {
-            decoding.decode(input, ethereumProgramState);
+            if (this.isValidTransactionInput(state, functionIdentifier)) {
+                transactionInput.decode(input, ethereumProgramState);
 
-            this.executeNestedInstructions(state);
+                this.executeNestedInstructions(state);
+            }
+        } catch (java.lang.StringIndexOutOfBoundsException ex) {
+            // ExceptionHandler.getInstance().handleException(txInputEmptyErrorMsg, ex);
         }
     }
 
