@@ -27,6 +27,7 @@ public class EthereumTransactionInput {
     public void decode(String input, EthereumProgramState state) {
 
         final String queryErrorMsg = "Error decoding input arguments.";
+        final String txInputEmptyErrorMsg = "Transaction input does not hold arguments.";
         final String stateNullErrorMsg = "State is null.";
 
         if (state == null) {
@@ -35,15 +36,15 @@ public class EthereumTransactionInput {
             return;
         }
 
-        try {
-            final List<TypeReference<?>> inputTypeReferences = this.createInputTypes();
-            assert inputTypeReferences.size() == this.inputArguments.size();
+        final List<TypeReference<?>> inputTypeReferences = this.createInputTypes();
+        assert inputTypeReferences.size() == this.inputArguments.size();
 
+        try {
             String encodedInputArgs = input.substring(10);
             final List<Object> results = FunctionReturnDecoder.decode(encodedInputArgs, convert(inputTypeReferences))
-                .stream()
-                .map(Type::getValue)
-                .collect(Collectors.toList());
+            .stream()
+            .map(Type::getValue)
+            .collect(Collectors.toList());
 
             assert this.inputArguments.size() == results.size();
 
@@ -52,6 +53,8 @@ public class EthereumTransactionInput {
                 Object value = results.get(i);
                 state.getValueStore().setValue(nameOfVariable, value);
             }
+        } catch (java.lang.StringIndexOutOfBoundsException ex) {
+            ExceptionHandler.getInstance().handleException(txInputEmptyErrorMsg, ex);
         } catch (Throwable cause) {
             ExceptionHandler.getInstance().handleException(queryErrorMsg, cause);
         }
