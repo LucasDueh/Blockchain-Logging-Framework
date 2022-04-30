@@ -344,5 +344,10 @@ public class FilterDefinitionAnalyzer extends SemanticAnalyzer {
         }
     }
 
+    @Override
+    public void exitTransactionInputFilter(final BcqlParser.TransactionInputFilterContext ctx) {
+        this.verifyAddressList(ctx.addressList());
+    }
+
     // #endregion transaction input filter
 }

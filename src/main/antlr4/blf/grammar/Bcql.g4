@@ -148,11 +148,11 @@ genericFilter
 
 
 /** A transactionInputFilter consists of 
-    the encoded function identifier that is used as a filter predicte and
+    the sender contract address, the encoded function identifier that is used as a filter predicte and
     at least one smartContractParameter (divided by ','), defining the decoded input parameters of the respective function*/
 
 transactionInputFilter
-    : KEY_TRANSACTION_INPUT '(' functionIdentifier=valueExpression ')' '(' smartContractParameter (',' smartContractParameter)* ')'
+    : KEY_TRANSACTION_INPUT '(' addressList ')' '(' functionIdentifier=valueExpression ')' '(' smartContractParameter (',' smartContractParameter)* ')'
     ;
 
 
