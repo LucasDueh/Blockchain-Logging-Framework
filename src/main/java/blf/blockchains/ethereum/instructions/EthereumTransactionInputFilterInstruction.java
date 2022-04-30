@@ -44,7 +44,7 @@ public class EthereumTransactionInputFilterInstruction extends Instruction {
                 this.executeNestedInstructions(state);
             }
         } catch (java.lang.StringIndexOutOfBoundsException ex) {
-            ExceptionHandler.getInstance().handleException(txInputEmptyErrorMsg, ex);
+            // ExceptionHandler.getInstance().handleException(txInputEmptyErrorMsg, ex);
         }
     }
 
