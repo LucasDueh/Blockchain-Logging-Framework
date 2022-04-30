@@ -40,12 +40,12 @@ public class EthereumTransactionInputFilterInstruction extends Instruction {
 
             if (this.isValidTransactionInput(state, functionIdentifier)) {
                 transactionInput.decode(input, ethereumProgramState);
-    
+
                 this.executeNestedInstructions(state);
             }
         } catch (java.lang.StringIndexOutOfBoundsException ex) {
             ExceptionHandler.getInstance().handleException(txInputEmptyErrorMsg, ex);
-        }        
+        }
     }
 
     private boolean isValidTransactionInput(ProgramState state, String functionIdentifier) {
