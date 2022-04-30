@@ -14,12 +14,12 @@ import org.web3j.abi.datatypes.Type;
 import static org.web3j.abi.Utils.convert;
 
 /**
- * TransactionInputDecoding
+ * TransactionInput
  */
-public class EthereumTransactionInputDecoding {
+public class EthereumTransactionInput {
     private final List<Parameter> inputArguments;
 
-    public EthereumTransactionInputDecoding(@NonNull List<Parameter> inputArguments) {
+    public EthereumTransactionInput(@NonNull List<Parameter> inputArguments) {
         this.inputArguments = new ArrayList<>(inputArguments);
     }
 
@@ -60,40 +60,4 @@ public class EthereumTransactionInputDecoding {
     private List<TypeReference<?>> createInputTypes() {
         return this.inputArguments.stream().map(Parameter::getType).collect(Collectors.toList());
     }
-
-    // @SuppressWarnings("all")
-    // private void setValues(List<Type> values, EthereumProgramState state) {
-    // if (!this.matchOutputParameters(values)) {
-    // throw new IllegalArgumentException("Output parameters not compatible with
-    // return values.");
-    // }
-
-    // IntStream.range(0, values.size()).forEach(i -> {
-    // final Object value = values.get(i).getValue();
-    // final String name = this.inputArguments.get(i).getName();
-    // state.getValueStore().setValue(name, value);
-    // });
-    // }
-
-    // @SuppressWarnings("all")
-    // private boolean matchOutputParameters(List<Type> values) {
-    // if (values.size() != this.inputArguments.size()) {
-    // return false;
-    // }
-
-    // return IntStream.range(0, values.size()).allMatch(i ->
-    // typesMatch(values.get(i), this.inputArguments.get(i)));
-    // }
-
-    // @SuppressWarnings("all")
-    // private boolean typesMatch(Type type, Parameter parameter) {
-    // if (type == null) {
-    // return false;
-    // }
-    // try {
-    // return parameter.getType().getClassType().equals(type.getClass());
-    // } catch (Throwable cause) {
-    // return false;
-    // }
-    // }
 }

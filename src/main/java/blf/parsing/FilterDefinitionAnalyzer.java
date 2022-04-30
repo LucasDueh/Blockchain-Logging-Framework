@@ -321,10 +321,10 @@ public class FilterDefinitionAnalyzer extends SemanticAnalyzer {
 
     // #endregion Smart contract filter
 
-    // #region transaction input decoding filter
+    // #region transaction input filter
 
     @Override
-    public void enterTransactionInputDecodingFilter(BcqlParser.TransactionInputDecodingFilterContext ctx) {
+    public void enterTransactionInputFilter(BcqlParser.TransactionInputFilterContext ctx) {
         final int funcIdentifierBytesLength = 4;
         boolean isErroreous = false;
 
@@ -344,5 +344,5 @@ public class FilterDefinitionAnalyzer extends SemanticAnalyzer {
         }
     }
 
-    // #endregion transaction input decoding filter
+    // #endregion transaction input filter
 }

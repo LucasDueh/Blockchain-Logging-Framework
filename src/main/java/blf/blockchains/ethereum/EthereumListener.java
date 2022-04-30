@@ -202,8 +202,7 @@ public class EthereumListener extends BaseBlockchainListener {
         final BcqlParser.BlockFilterContext blockFilterCtx = filterCtx.blockFilter();
         final BcqlParser.TransactionFilterContext transactionFilterCtx = filterCtx.transactionFilter();
         final BcqlParser.SmartContractFilterContext smartContractFilterCtx = filterCtx.smartContractFilter();
-        final BcqlParser.TransactionInputDecodingFilterContext transactionInputDecodingFilterCtx = filterCtx
-            .transactionInputDecodingFilter();
+        final BcqlParser.TransactionInputFilterContext transactionInputFilterCtx = filterCtx.transactionInputFilter();
 
         // already handled by exitScope method in super
         if (filterCtx.genericFilter() != null) {
@@ -234,8 +233,8 @@ public class EthereumListener extends BaseBlockchainListener {
             return;
         }
 
-        if (transactionInputDecodingFilterCtx != null) {
-            this.buildTransactionInputDecodingFilter(transactionInputDecodingFilterCtx);
+        if (transactionInputFilterCtx != null) {
+            this.buildTransactionInputFilter(transactionInputFilterCtx);
 
             return;
         }
@@ -319,13 +318,13 @@ public class EthereumListener extends BaseBlockchainListener {
     }
 
     @Override
-    public void enterTransactionInputDecodingFilter(BcqlParser.TransactionInputDecodingFilterContext ctx) {
-        LOGGER.info("Prepare transaction input decoding filter build");
-        this.composer.prepareTransactionInputDecodingFilterBuild();
+    public void enterTransactionInputFilter(BcqlParser.TransactionInputFilterContext ctx) {
+        LOGGER.info("Prepare transaction input filter build");
+        this.composer.prepareTransactionInputFilterBuild();
     }
 
-    private void buildTransactionInputDecodingFilter(BcqlParser.TransactionInputDecodingFilterContext ctx) {
-        LOGGER.info("Build transaction input decoding filter");
+    private void buildTransactionInputFilter(BcqlParser.TransactionInputFilterContext ctx) {
+        LOGGER.info("Build transaction input filter");
         final ValueAccessorSpecification functionIdentifier = this.getValueAccessor(ctx.functionIdentifier);
 
         final List<ParameterSpecification> inputs = ctx.smartContractParameter()
@@ -333,6 +332,6 @@ public class EthereumListener extends BaseBlockchainListener {
             .map(this::createParameterSpecification)
             .collect(Collectors.toList());
 
-        this.composer.buildTransactionInputDecodingFilter(TransactionInputDecodingFilterSpecification.of(functionIdentifier, inputs));
+        this.composer.buildTransactionInputFilter(TransactionInputFilterSpecification.of(functionIdentifier, inputs));
     }
 }

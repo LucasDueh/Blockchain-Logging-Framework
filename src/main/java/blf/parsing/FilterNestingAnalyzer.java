@@ -1,12 +1,11 @@
 package blf.parsing;
 
+import blf.grammar.BcqlParser;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
-
-import blf.grammar.BcqlParser;
 import org.antlr.v4.runtime.Token;
 
 /**
@@ -71,8 +70,8 @@ public class FilterNestingAnalyzer extends SemanticAnalyzer {
             return GENERIC_FILTER;
         } else if (ctx.smartContractFilter() != null) {
             return SMART_CONTRACT_FILTER;
-        } else if (ctx.transactionInputDecodingFilter() != null) {
-            return TRANSACTION_INPUT_DECODING_FILTER;
+        } else if (ctx.transactionInputFilter() != null) {
+            return TRANSACTION_INPUT_FILTER;
         } else {
             throw new UnsupportedOperationException("This filter type is not supported");
         }
@@ -84,7 +83,7 @@ public class FilterNestingAnalyzer extends SemanticAnalyzer {
     private static final String TRANSACTION_FILTER = "transaction";
     private static final String LOG_ENRY_FILTER = "log entry";
     private static final String SMART_CONTRACT_FILTER = "smart contract";
-    private static final String TRANSACTION_INPUT_DECODING_FILTER = "transaction input decoding";
+    private static final String TRANSACTION_INPUT_FILTER = "transaction input";
     private static final Map<String, Predicate<Stack<String>>> VALID_ENCLOSING_FILTERS;
 
     static {
@@ -94,10 +93,7 @@ public class FilterNestingAnalyzer extends SemanticAnalyzer {
         VALID_ENCLOSING_FILTERS.put(LOG_ENRY_FILTER, FilterNestingAnalyzer::areLogEntryFilterParentsValid);
         VALID_ENCLOSING_FILTERS.put(GENERIC_FILTER, FilterNestingAnalyzer::areGenericFilterParentsValid);
         VALID_ENCLOSING_FILTERS.put(SMART_CONTRACT_FILTER, FilterNestingAnalyzer::areSmartContractFilterParentsValid);
-        VALID_ENCLOSING_FILTERS.put(
-            TRANSACTION_INPUT_DECODING_FILTER,
-            FilterNestingAnalyzer::areTransactionInputDecodingFilterParentsValid
-        );
+        VALID_ENCLOSING_FILTERS.put(TRANSACTION_INPUT_FILTER, FilterNestingAnalyzer::areTransactionInputFilterParentsValid);
     }
 
     private static boolean areBlockFilterParentsValid(Stack<String> stack) {
@@ -126,11 +122,11 @@ public class FilterNestingAnalyzer extends SemanticAnalyzer {
     }
 
     private static boolean areSmartContractFilterParentsValid(Stack<String> stack) {
-        boolean isValidParent = stack.peek().equals(BLOCK_FILTER) || stack.peek().equals(TRANSACTION_INPUT_DECODING_FILTER);
+        boolean isValidParent = stack.peek().equals(BLOCK_FILTER) || stack.peek().equals(TRANSACTION_INPUT_FILTER);
         return !stack.isEmpty() && isValidParent;
     }
 
-    private static boolean areTransactionInputDecodingFilterParentsValid(Stack<String> stack) {
+    private static boolean areTransactionInputFilterParentsValid(Stack<String> stack) {
         return !stack.isEmpty()
             && stack.peek().equals(TRANSACTION_FILTER)
             && countFilters(stack, BLOCK_FILTER) == 1
