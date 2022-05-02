@@ -193,7 +193,7 @@ public class SpecificationComposer {
         this.closeScope(filter);
     }
 
-    public void buildTransactionInputFilter(TransactionInputFilterSpecification specification) {
+    public void buildTransactionInputFilter(AddressListSpecification contract, TransactionInputFilterSpecification specification) {
         final FactoryState statesPeek = this.states.peek();
 
         if (statesPeek != FactoryState.TRANSACTION_INPUT_FILTER) {
@@ -207,6 +207,7 @@ public class SpecificationComposer {
         }
 
         final EthereumTransactionInputFilterInstruction filter = new EthereumTransactionInputFilterInstruction(
+            contract.getAddressCheck(),
             specification.getTransactionInputCriterion(),
             specification.getTransactionInput(),
             this.instructionListsStack.peek()
@@ -276,7 +277,8 @@ public class SpecificationComposer {
         LOG_ENTRY_FILTER,
         SMART_CONTRACT_FILTER,
         TRANSACTION_INPUT_FILTER,
-        GENERIC_FILTER;
+        GENERIC_FILTER,
+        TRANSACTION_REPLAY;
 
         @Override
         public String toString() {
@@ -295,6 +297,8 @@ public class SpecificationComposer {
                     return "transaction input filter";
                 case GENERIC_FILTER:
                     return "generic filter";
+                case TRANSACTION_REPLAY:
+                    return "transaction replay";
                 default:
                     final String errorMsg = String.format("FactoryState constant '%s' unknown.", this);
                     ExceptionHandler.getInstance().handleException(errorMsg, new Exception());
