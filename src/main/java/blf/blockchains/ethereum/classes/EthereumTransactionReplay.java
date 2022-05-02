@@ -1,16 +1,13 @@
 package blf.blockchains.ethereum.classes;
 
 import blf.blockchains.ethereum.reader.EthereumClient;
-import blf.blockchains.ethereum.reader.EthereumTransaction;
 import blf.blockchains.ethereum.state.EthereumProgramState;
 import blf.core.exceptions.ExceptionHandler;
 import blf.core.parameters.Parameter;
 import io.reactivex.annotations.NonNull;
-import org.web3j.abi.TypeDecoder;
 import org.web3j.abi.TypeReference;
 import org.web3j.abi.datatypes.Type;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
