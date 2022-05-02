@@ -153,7 +153,7 @@ genericFilter
     at least one smartContractParameter (divided by ','), defining the decoded input parameters of the respective function*/
 
 transactionInputFilter
-    : KEY_TRANSACTION_INPUT '(' addressList ')' '(' functionIdentifier=valueExpression ')' '(' smartContractParameter (',' smartContractParameter)* ')'
+    : KEY_TRANSACTION_INPUT '(' addressList ')' '(' functionName=Identifier '(' smartContractParameter (',' smartContractParameter)* ')' ')'
     ;
 
 

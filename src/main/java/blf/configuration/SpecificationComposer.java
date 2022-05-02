@@ -215,7 +215,7 @@ public class SpecificationComposer {
 
         final EthereumTransactionInputFilterInstruction filter = new EthereumTransactionInputFilterInstruction(
             contract.getAddressCheck(),
-            specification.getTransactionInputCriterion(),
+            specification.getFunctionIdentifier(),
             specification.getTransactionInput(),
             this.instructionListsStack.peek()
         );

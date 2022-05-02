@@ -332,7 +332,6 @@ public class EthereumListener extends BaseBlockchainListener {
 
     private void buildTransactionInputFilter(BcqlParser.TransactionInputFilterContext ctx) {
         LOGGER.info("Build transaction input filter");
-        final ValueAccessorSpecification functionIdentifier = this.getValueAccessor(ctx.functionIdentifier);
         final AddressListSpecification contract = this.getAddressListSpecification(ctx.addressList());
 
         final List<ParameterSpecification> inputs = ctx.smartContractParameter()
@@ -340,7 +339,7 @@ public class EthereumListener extends BaseBlockchainListener {
             .map(this::createParameterSpecification)
             .collect(Collectors.toList());
 
-        this.composer.buildTransactionInputFilter(contract, TransactionInputFilterSpecification.of(functionIdentifier, inputs));
+        this.composer.buildTransactionInputFilter(contract, TransactionInputFilterSpecification.of(ctx.functionName.getText(), inputs));
     }
 
     @Override
