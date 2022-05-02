@@ -15,14 +15,17 @@ import java.util.List;
  */
 public class EthereumTransactionInputFilterInstruction extends Instruction {
     private final FilterPredicate<String> transactionInputCriterion;
+    private final FilterPredicate<String> contractAddressCriterion;
     private final EthereumTransactionInput transactionInput;
 
     public EthereumTransactionInputFilterInstruction(
+        @NonNull FilterPredicate<String> contractAddressCriterion,
         @NonNull FilterPredicate<String> transactionInputCriterion,
         @NonNull EthereumTransactionInput transactionInput,
         List<Instruction> instructions
     ) {
         super(instructions);
+        this.contractAddressCriterion = contractAddressCriterion;
         this.transactionInputCriterion = transactionInputCriterion;
         this.transactionInput = transactionInput;
     }
@@ -32,23 +35,29 @@ public class EthereumTransactionInputFilterInstruction extends Instruction {
         final EthereumProgramState ethereumProgramState = (EthereumProgramState) state;
         final EthereumDataReader ethereumReader = ethereumProgramState.getReader();
 
-        final String txInputEmptyErrorMsg = "Transaction input is not specified.";
+        String toAddress = ethereumReader.getCurrentTransaction().getTo();
+        if (this.isValidAddress(state, toAddress)) {
+            String input = ethereumReader.getCurrentTransaction().getInput();
+            try {
+                String functionIdentifier = input.substring(0, 10);
 
-        String input = ethereumReader.getCurrentTransaction().getInput();
-        try {
-            String functionIdentifier = input.substring(0, 10);
+                if (this.isValidTransactionInput(state, functionIdentifier)) {
+                    transactionInput.decode(input, ethereumProgramState);
 
-            if (this.isValidTransactionInput(state, functionIdentifier)) {
-                transactionInput.decode(input, ethereumProgramState);
-
-                this.executeNestedInstructions(state);
+                    this.executeNestedInstructions(state);
+                }
+            } catch (java.lang.StringIndexOutOfBoundsException ex) {
+                // final String txInputEmptyErrorMsg = "Transaction input is not specified.";
+                // ExceptionHandler.getInstance().handleException(txInputEmptyErrorMsg, ex);
             }
-        } catch (java.lang.StringIndexOutOfBoundsException ex) {
-            // ExceptionHandler.getInstance().handleException(txInputEmptyErrorMsg, ex);
         }
     }
 
     private boolean isValidTransactionInput(ProgramState state, String functionIdentifier) {
         return this.transactionInputCriterion.test(state, functionIdentifier);
+    }
+
+    private boolean isValidAddress(ProgramState state, String address) {
+        return this.contractAddressCriterion.test(state, address);
     }
 }
