@@ -14,10 +14,7 @@ import java.util.List;
 public class EthereumTransactionReplayInstruction extends Instruction {
     private final EthereumTransactionReplay transactionReplay;
 
-    public EthereumTransactionReplayInstruction(
-        @NonNull EthereumTransactionReplay transactionReplay,
-        List<Instruction> instructions
-    ) {
+    public EthereumTransactionReplayInstruction(@NonNull EthereumTransactionReplay transactionReplay, List<Instruction> instructions) {
         super(instructions);
         this.transactionReplay = transactionReplay;
     }
@@ -28,7 +25,7 @@ public class EthereumTransactionReplayInstruction extends Instruction {
         final EthereumDataReader ethereumReader = ethereumProgramState.getReader();
 
         String hash = ethereumReader.getCurrentTransaction().getHash();
-        
+
         transactionReplay.replay(hash, ethereumProgramState);
 
         this.executeNestedInstructions(state);
