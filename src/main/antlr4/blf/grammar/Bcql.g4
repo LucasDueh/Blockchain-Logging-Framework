@@ -74,7 +74,6 @@ statement
 
 scope
     : filter '{' statement* '}'
-    | transactionReplay '{' statement* '}'
     ;
 
 
@@ -90,6 +89,7 @@ filter
     | smartContractFilter
     | genericFilter
     | transactionInputFilter
+    | transactionReplay
     ;
 
 
