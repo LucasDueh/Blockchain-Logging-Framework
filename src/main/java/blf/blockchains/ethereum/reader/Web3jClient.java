@@ -19,7 +19,6 @@ import org.web3j.protocol.ipc.WindowsIpcService;
 import org.web3j.protocol.websocket.WebSocketClient;
 import org.web3j.protocol.websocket.WebSocketService;
 import org.web3j.protocol.parity.Parity;
-import org.web3j.protocol.parity.methods.response.FullTraceInfo;
 import org.web3j.protocol.parity.methods.response.ParityFullTraceResponse;
 
 import java.io.IOException;
@@ -169,29 +168,6 @@ public class Web3jClient implements EthereumClient {
         String data = FunctionEncoder.encode(function);
         org.web3j.protocol.core.methods.request.Transaction tx = org.web3j.protocol.core.methods.request.Transaction
             .createEthCallTransaction(contract, contract, data);
-
-        // org.web3j.protocol.core.methods.request.Transaction tx = org.web3j.protocol.core.methods.request.Transaction
-        // .createFunctionCallTransaction(
-        // ctx.getFrom(),
-        // ctx.getNonce(),
-        // ctx.getGasPrice().multiply(BigInteger.valueOf(2)),
-        // ctx.getGas(),
-        // contract,
-        // ctx.getValue(),
-        // data
-        // );
-
-        // List<String> traceTypes = new ArrayList<String>();
-        // traceTypes.add("trace");
-        // traceTypes.add("vmTrace");
-        // traceTypes.add("statediff");
-
-        // ParityFullTraceResponse response = this.parity.traceReplayTransaction(ctx.getHash(), Arrays.asList("trace")).send();
-        // System.out.println(ctx.getHash());
-        // System.out.println(response.getFullTraceInfo().getOutput());
-        // System.out.println(response.getFullTraceInfo().getStateDiff());
-        // System.out.println(response.getFullTraceInfo().getTrace());
-
         final DefaultBlockParameterNumber number = new DefaultBlockParameterNumber(block);
         EthCall result = this.web3j.ethCall(tx, number).send();
         return FunctionReturnDecoder.decode(result.getResult(), function.getOutputParameters());
@@ -201,13 +177,9 @@ public class Web3jClient implements EthereumClient {
     public List<Type> replayTransaction(String hash, List<TypeReference<Type>> returnTypes) throws IOException {
         assert hash != null;
         assert returnTypes != null && returnTypes.stream().allMatch(Objects::nonNull);
-
-        List<String> traceTypes = Arrays.asList("trace", "vmTrace", "statediff");
-
+        List<String> traceTypes = Arrays.asList("trace"); // , "vmTrace", "stateDiff");
         ParityFullTraceResponse response = this.parity.traceReplayTransaction(hash, traceTypes).send();
-        // response.getFullTraceInfo().getStateDiff();
-        // response.getFullTraceInfo().getTrace();
-
+        // response.getFullTraceInfo().getStateDiff(); response.getFullTraceInfo().getTrace();
         return FunctionReturnDecoder.decode(response.getFullTraceInfo().getOutput(), returnTypes);
     }
 
