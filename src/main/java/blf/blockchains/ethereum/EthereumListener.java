@@ -347,6 +347,6 @@ public class EthereumListener extends BaseBlockchainListener {
             .map(this::createParameterSpecification)
             .collect(Collectors.toList());
 
-        this.composer.buildTransactionReplay(outputParams);
+        this.composer.buildTransactionReplay(TransactionReplaySpecification.of(outputParams));
     }
 }
