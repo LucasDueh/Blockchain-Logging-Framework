@@ -1,5 +1,6 @@
 package blf.configuration;
 
+import blf.blockchains.ethereum.classes.EthereumTransactionReplay;
 import blf.blockchains.ethereum.instructions.EthereumLogEntryFilterInstruction;
 import blf.blockchains.ethereum.instructions.EthereumSmartContractFilterInstruction;
 import blf.blockchains.ethereum.instructions.EthereumTransactionFilterInstruction;
@@ -54,6 +55,10 @@ public class SpecificationComposer {
         this.prepareBuild(FactoryState.TRANSACTION_INPUT_FILTER, FactoryState.TRANSACTION_FILTER);
     }
 
+    public void prepareTransactionReplayBuild() {
+        this.prepareBuild(FactoryState.TRANSACTION_REPLAY, FactoryState.TRANSACTION_INPUT_FILTER);
+    }
+
     public void prepareGenericFilterBuild() {
         this.prepareBuild(
             FactoryState.GENERIC_FILTER,
@@ -62,6 +67,7 @@ public class SpecificationComposer {
             FactoryState.LOG_ENTRY_FILTER,
             FactoryState.SMART_CONTRACT_FILTER,
             FactoryState.TRANSACTION_INPUT_FILTER,
+            FactoryState.TRANSACTION_REPLAY,
             FactoryState.PROGRAM
         );
     }
@@ -210,6 +216,27 @@ public class SpecificationComposer {
             contract.getAddressCheck(),
             specification.getTransactionInputCriterion(),
             specification.getTransactionInput(),
+            this.instructionListsStack.peek()
+        );
+
+        this.closeScope(filter);
+    }
+
+    public void buildTransactionReplay(TransactionReplaySpecification specification) {
+        final FactoryState statesPeek = this.states.peek();
+
+        if (statesPeek != FactoryState.TRANSACTION_REPLAY) {
+            final String errorMsg = String.format(
+                "Cannot build a transaction replay, when construction of %s has not been finished.",
+                statesPeek
+            );
+            ExceptionHandler.getInstance().handleException(errorMsg, new Exception());
+
+            return;
+        }
+
+        final EthereumSmartContractFilterInstruction filter = new EthereumTransactionReplayInstruction(
+            specification.getTransactionReplay(),
             this.instructionListsStack.peek()
         );
 
