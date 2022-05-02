@@ -203,6 +203,7 @@ public class EthereumListener extends BaseBlockchainListener {
         final BcqlParser.TransactionFilterContext transactionFilterCtx = filterCtx.transactionFilter();
         final BcqlParser.SmartContractFilterContext smartContractFilterCtx = filterCtx.smartContractFilter();
         final BcqlParser.TransactionInputFilterContext transactionInputFilterCtx = filterCtx.transactionInputFilter();
+        final BcqlParser.TransactionReplayContext transactionReplayCtx = filterCtx.transactionReplay();
 
         // already handled by exitScope method in super
         if (filterCtx.genericFilter() != null) {
@@ -235,6 +236,12 @@ public class EthereumListener extends BaseBlockchainListener {
 
         if (transactionInputFilterCtx != null) {
             this.buildTransactionInputFilter(transactionInputFilterCtx);
+
+            return;
+        }
+
+        if (transactionReplayCtx != null) {
+            this.buildTransactionReplay(transactionReplayCtx);
 
             return;
         }
