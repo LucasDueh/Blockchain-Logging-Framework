@@ -20,9 +20,7 @@ public class TransactionReplaySpecification {
         return this.transactionReplay;
     }
 
-    public static TransactionReplaySpecification of(
-        @NonNull List<ParameterSpecification> outputParameters
-    ) {
+    public static TransactionReplaySpecification of(@NonNull List<ParameterSpecification> outputParameters) {
         final List<Parameter> outputs = outputParameters.stream().map(ParameterSpecification::getParameter).collect(Collectors.toList());
         return new TransactionReplaySpecification(outputs);
     }
