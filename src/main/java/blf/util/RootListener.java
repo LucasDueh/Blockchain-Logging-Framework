@@ -265,6 +265,16 @@ public class RootListener implements BcqlListener {
     }
 
     @Override
+    public void enterTransactionReplay(TransactionReplayContext ctx) {
+        this.notifyListener(BcqlListener::enterTransactionReplay, ctx);
+    }
+
+    @Override
+    public void exitTransactionReplay(TransactionReplayContext ctx) {
+        this.notifyListener(BcqlListener::exitTransactionReplay, ctx);
+    }
+
+    @Override
     public void enterAddressList(AddressListContext ctx) {
         this.notifyListener(BcqlListener::enterAddressList, ctx);
     }

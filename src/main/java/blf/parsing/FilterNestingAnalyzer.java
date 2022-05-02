@@ -72,6 +72,8 @@ public class FilterNestingAnalyzer extends SemanticAnalyzer {
             return SMART_CONTRACT_FILTER;
         } else if (ctx.transactionInputFilter() != null) {
             return TRANSACTION_INPUT_FILTER;
+        } else if (ctx.transactionReplay() != null) {
+            return TRANSACTION_REPLAY;
         } else {
             throw new UnsupportedOperationException("This filter type is not supported");
         }
@@ -84,6 +86,7 @@ public class FilterNestingAnalyzer extends SemanticAnalyzer {
     private static final String LOG_ENRY_FILTER = "log entry";
     private static final String SMART_CONTRACT_FILTER = "smart contract";
     private static final String TRANSACTION_INPUT_FILTER = "transaction input";
+    private static final String TRANSACTION_REPLAY = "transaction replay";
     private static final Map<String, Predicate<Stack<String>>> VALID_ENCLOSING_FILTERS;
 
     static {
@@ -94,6 +97,7 @@ public class FilterNestingAnalyzer extends SemanticAnalyzer {
         VALID_ENCLOSING_FILTERS.put(GENERIC_FILTER, FilterNestingAnalyzer::areGenericFilterParentsValid);
         VALID_ENCLOSING_FILTERS.put(SMART_CONTRACT_FILTER, FilterNestingAnalyzer::areSmartContractFilterParentsValid);
         VALID_ENCLOSING_FILTERS.put(TRANSACTION_INPUT_FILTER, FilterNestingAnalyzer::areTransactionInputFilterParentsValid);
+        VALID_ENCLOSING_FILTERS.put(TRANSACTION_REPLAY, FilterNestingAnalyzer::areTransactionReplayParentsValid);
     }
 
     private static boolean areBlockFilterParentsValid(Stack<String> stack) {
@@ -130,6 +134,14 @@ public class FilterNestingAnalyzer extends SemanticAnalyzer {
         return !stack.isEmpty()
             && stack.peek().equals(TRANSACTION_FILTER)
             && countFilters(stack, BLOCK_FILTER) == 1
-            && countFilters(stack, TRANSACTION_FILTER) <= 1;
+            && countFilters(stack, TRANSACTION_FILTER) == 1;
+    }
+
+    private static boolean areTransactionReplayParentsValid(Stack<String> stack) {
+        return !stack.isEmpty()
+            && stack.peek().equals(TRANSACTION_INPUT_FILTER)
+            && countFilters(stack, BLOCK_FILTER) == 1
+            && countFilters(stack, TRANSACTION_FILTER) == 1
+            && countFilters(stack, TRANSACTION_INPUT_FILTER) == 1;
     }
 }

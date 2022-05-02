@@ -89,6 +89,7 @@ filter
     | smartContractFilter
     | genericFilter
     | transactionInputFilter
+    | transactionReplay
     ;
 
 
@@ -129,11 +130,11 @@ logEntryFilter
 
     Users must specify the contract address and the member variables or functions. Note that these variables and functions
     must be part of the contract’s public API. Must be nested within a block filter. Starts with the keyword SMART CONTRACT
-    and subsequently sets a valueExpression and at least one smartContractQuery, each inside of () braces. */
+    and subsequently sets a valueExpression and at least one smartContractQuery, each inside of () braces.
+    Optionally, a blockOffset can be set to query the state at a different block number. */
 
 smartContractFilter
-    : KEY_SMART_CONTRACT '(' contractAddress=valueExpression ')' ('(' smartContractQuery ')')+
-    | KEY_SMART_CONTRACT '(' blockOffset=valueExpression ')' '(' contractAddress=valueExpression ')' ('(' smartContractQuery ')')+
+    : KEY_SMART_CONTRACT ('(' blockOffset=valueExpression ')')? '(' contractAddress=valueExpression ')' ('(' smartContractQuery ')')+
     ;
 
 
@@ -148,11 +149,24 @@ genericFilter
 
 
 /** A transactionInputFilter consists of 
-    the sender contract address, the encoded function identifier that is used as a filter predicte and
+    the sender contract address, the encoded function identifier that is used as a filter predicate and
     at least one smartContractParameter (divided by ','), defining the decoded input parameters of the respective function*/
 
 transactionInputFilter
-    : KEY_TRANSACTION_INPUT '(' addressList ')' '(' functionIdentifier=valueExpression ')' '(' smartContractParameter (',' smartContractParameter)* ')'
+    : KEY_TRANSACTION_INPUT '(' addressList ')' '(' functionName=Identifier '(' smartContractParameter (',' smartContractParameter)* ')' ')'
+    ;
+
+
+//      TRANSACTION REPLAY: Primary grammar rules to reexecute a transaction and capture execution traces
+
+/** A transactionReplay allows for reexecuting and tracing the execution of a transaction.
+
+    Users must specify the parameters to capture the returned values of the executed function.
+    Must be nested within a transaction input filter. Thus, it executes the current transaction.
+    Starts with the keyword TRANSACTION REPLAY and subsequently sets the smartContractParameters inside of () braces. */
+
+transactionReplay
+    : KEY_TRANSACTION_REPLAY ('(' smartContractParameter (',' smartContractParameter)*')')
     ;
 
 

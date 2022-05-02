@@ -324,27 +324,6 @@ public class FilterDefinitionAnalyzer extends SemanticAnalyzer {
     // #region transaction input filter
 
     @Override
-    public void enterTransactionInputFilter(BcqlParser.TransactionInputFilterContext ctx) {
-        final int funcIdentifierBytesLength = 4;
-        boolean isErroreous = false;
-
-        if (ctx.functionIdentifier.literal() != null) {
-            if (!TypeUtils.isBytesLiteral(ctx.functionIdentifier.literal().getText(), funcIdentifierBytesLength)) {
-                isErroreous = true;
-            }
-        } else {
-            isErroreous = true;
-        }
-
-        if (isErroreous) {
-            this.addError(
-                ctx.functionIdentifier.start,
-                "Transaction input function identifier must be a literal of bytes type with length 4."
-            );
-        }
-    }
-
-    @Override
     public void exitTransactionInputFilter(final BcqlParser.TransactionInputFilterContext ctx) {
         this.verifyAddressList(ctx.addressList());
     }

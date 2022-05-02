@@ -1,9 +1,11 @@
 package blf.configuration;
 
+import blf.blockchains.ethereum.classes.EthereumTransactionReplay;
 import blf.blockchains.ethereum.instructions.EthereumLogEntryFilterInstruction;
 import blf.blockchains.ethereum.instructions.EthereumSmartContractFilterInstruction;
 import blf.blockchains.ethereum.instructions.EthereumTransactionFilterInstruction;
 import blf.blockchains.ethereum.instructions.EthereumTransactionInputFilterInstruction;
+import blf.blockchains.ethereum.instructions.EthereumTransactionReplayInstruction;
 import blf.core.Program;
 import blf.core.exceptions.ExceptionHandler;
 import blf.core.instructions.GenericFilterInstruction;
@@ -54,6 +56,10 @@ public class SpecificationComposer {
         this.prepareBuild(FactoryState.TRANSACTION_INPUT_FILTER, FactoryState.TRANSACTION_FILTER);
     }
 
+    public void prepareTransactionReplayBuild() {
+        this.prepareBuild(FactoryState.TRANSACTION_REPLAY, FactoryState.TRANSACTION_INPUT_FILTER);
+    }
+
     public void prepareGenericFilterBuild() {
         this.prepareBuild(
             FactoryState.GENERIC_FILTER,
@@ -62,6 +68,7 @@ public class SpecificationComposer {
             FactoryState.LOG_ENTRY_FILTER,
             FactoryState.SMART_CONTRACT_FILTER,
             FactoryState.TRANSACTION_INPUT_FILTER,
+            FactoryState.TRANSACTION_REPLAY,
             FactoryState.PROGRAM
         );
     }
@@ -193,7 +200,7 @@ public class SpecificationComposer {
         this.closeScope(filter);
     }
 
-    public void buildTransactionInputFilter(TransactionInputFilterSpecification specification) {
+    public void buildTransactionInputFilter(AddressListSpecification contract, TransactionInputFilterSpecification specification) {
         final FactoryState statesPeek = this.states.peek();
 
         if (statesPeek != FactoryState.TRANSACTION_INPUT_FILTER) {
@@ -207,8 +214,30 @@ public class SpecificationComposer {
         }
 
         final EthereumTransactionInputFilterInstruction filter = new EthereumTransactionInputFilterInstruction(
-            specification.getTransactionInputCriterion(),
+            contract.getAddressCheck(),
+            specification.getFunctionIdentifier(),
             specification.getTransactionInput(),
+            this.instructionListsStack.peek()
+        );
+
+        this.closeScope(filter);
+    }
+
+    public void buildTransactionReplay(TransactionReplaySpecification specification) {
+        final FactoryState statesPeek = this.states.peek();
+
+        if (statesPeek != FactoryState.TRANSACTION_REPLAY) {
+            final String errorMsg = String.format(
+                "Cannot build a transaction replay, when construction of %s has not been finished.",
+                statesPeek
+            );
+            ExceptionHandler.getInstance().handleException(errorMsg, new Exception());
+
+            return;
+        }
+
+        final EthereumTransactionReplayInstruction filter = new EthereumTransactionReplayInstruction(
+            specification.getTransactionReplay(),
             this.instructionListsStack.peek()
         );
 
@@ -276,7 +305,8 @@ public class SpecificationComposer {
         LOG_ENTRY_FILTER,
         SMART_CONTRACT_FILTER,
         TRANSACTION_INPUT_FILTER,
-        GENERIC_FILTER;
+        GENERIC_FILTER,
+        TRANSACTION_REPLAY;
 
         @Override
         public String toString() {
@@ -295,6 +325,8 @@ public class SpecificationComposer {
                     return "transaction input filter";
                 case GENERIC_FILTER:
                     return "generic filter";
+                case TRANSACTION_REPLAY:
+                    return "transaction replay";
                 default:
                     final String errorMsg = String.format("FactoryState constant '%s' unknown.", this);
                     ExceptionHandler.getInstance().handleException(errorMsg, new Exception());

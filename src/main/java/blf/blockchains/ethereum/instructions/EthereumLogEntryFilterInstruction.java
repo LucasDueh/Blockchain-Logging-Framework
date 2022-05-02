@@ -68,7 +68,7 @@ public class EthereumLogEntryFilterInstruction extends Instruction {
             );
             ExceptionHandler.getInstance().handleException(message, cause);
         } finally {
-            ethereumProgramState.getReader().setCurrentTransaction(null);
+            // ethereumProgramState.getReader().setCurrentTransaction(null);
         }
     }
 

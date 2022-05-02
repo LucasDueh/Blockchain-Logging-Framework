@@ -203,6 +203,7 @@ public class EthereumListener extends BaseBlockchainListener {
         final BcqlParser.TransactionFilterContext transactionFilterCtx = filterCtx.transactionFilter();
         final BcqlParser.SmartContractFilterContext smartContractFilterCtx = filterCtx.smartContractFilter();
         final BcqlParser.TransactionInputFilterContext transactionInputFilterCtx = filterCtx.transactionInputFilter();
+        final BcqlParser.TransactionReplayContext transactionReplayCtx = filterCtx.transactionReplay();
 
         // already handled by exitScope method in super
         if (filterCtx.genericFilter() != null) {
@@ -235,6 +236,12 @@ public class EthereumListener extends BaseBlockchainListener {
 
         if (transactionInputFilterCtx != null) {
             this.buildTransactionInputFilter(transactionInputFilterCtx);
+
+            return;
+        }
+
+        if (transactionReplayCtx != null) {
+            this.buildTransactionReplay(transactionReplayCtx);
 
             return;
         }
@@ -325,13 +332,27 @@ public class EthereumListener extends BaseBlockchainListener {
 
     private void buildTransactionInputFilter(BcqlParser.TransactionInputFilterContext ctx) {
         LOGGER.info("Build transaction input filter");
-        final ValueAccessorSpecification functionIdentifier = this.getValueAccessor(ctx.functionIdentifier);
+        final AddressListSpecification contract = this.getAddressListSpecification(ctx.addressList());
 
         final List<ParameterSpecification> inputs = ctx.smartContractParameter()
             .stream()
             .map(this::createParameterSpecification)
             .collect(Collectors.toList());
 
-        this.composer.buildTransactionInputFilter(TransactionInputFilterSpecification.of(functionIdentifier, inputs));
+        this.composer.buildTransactionInputFilter(contract, TransactionInputFilterSpecification.of(ctx.functionName.getText(), inputs));
+    }
+
+    @Override
+    public void enterTransactionReplay(BcqlParser.TransactionReplayContext ctx) {
+        this.composer.prepareTransactionReplayBuild();
+    }
+
+    private void buildTransactionReplay(BcqlParser.TransactionReplayContext ctx) {
+        final List<ParameterSpecification> outputParams = ctx.smartContractParameter()
+            .stream()
+            .map(this::createParameterSpecification)
+            .collect(Collectors.toList());
+
+        this.composer.buildTransactionReplay(TransactionReplaySpecification.of(outputParams));
     }
 }
