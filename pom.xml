@@ -26,7 +26,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <antlr4.version>4.7.2</antlr4.version>
-    <web3j.version>4.9.1</web3j.version>
+    <web3j.version>4.8.3</web3j.version>
     <logback-classic.version>1.2.3</logback-classic.version>
     <jackson.version>2.10.1</jackson.version>
     <blf.skip.assemble>false</blf.skip.assemble>
@@ -64,6 +64,11 @@
     <dependency>
       <groupId>org.web3j</groupId>
       <artifactId>abi</artifactId>
+      <version>${web3j.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.web3j</groupId>
+      <artifactId>parity</artifactId>
       <version>${web3j.version}</version>
     </dependency>
 
