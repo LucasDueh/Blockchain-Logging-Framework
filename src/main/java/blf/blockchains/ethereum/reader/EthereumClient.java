@@ -24,4 +24,7 @@ public interface EthereumClient {
         List<Type> inputParameters,
         List<TypeReference<?>> returnTypes
     ) throws Throwable;
+
+    @SuppressWarnings("all")
+    public List<Type> replayTransaction(String hash, List<TypeReference<Type>> returnTypes) throws Throwable;
 }
