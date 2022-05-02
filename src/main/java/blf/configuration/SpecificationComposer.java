@@ -5,6 +5,7 @@ import blf.blockchains.ethereum.instructions.EthereumLogEntryFilterInstruction;
 import blf.blockchains.ethereum.instructions.EthereumSmartContractFilterInstruction;
 import blf.blockchains.ethereum.instructions.EthereumTransactionFilterInstruction;
 import blf.blockchains.ethereum.instructions.EthereumTransactionInputFilterInstruction;
+import blf.blockchains.ethereum.instructions.EthereumTransactionReplayInstruction;
 import blf.core.Program;
 import blf.core.exceptions.ExceptionHandler;
 import blf.core.instructions.GenericFilterInstruction;
@@ -235,7 +236,7 @@ public class SpecificationComposer {
             return;
         }
 
-        final EthereumSmartContractFilterInstruction filter = new EthereumTransactionReplayInstruction(
+        final EthereumTransactionReplayInstruction filter = new EthereumTransactionReplayInstruction(
             specification.getTransactionReplay(),
             this.instructionListsStack.peek()
         );
