@@ -120,13 +120,13 @@ public class XesWriter extends DataWriter {
     }
 
     public void addDateValue(@NonNull String key, @NonNull BigInteger value) {
-        final Date date = new Date(value.longValue());
+        final Date date = new Date(value.longValue() * 1000);
         this.addAttribute(key, date, XAttributeTimestampImpl::new);
         LOGGER.info(String.format("Date attribute %s added.", key));
     }
 
     public void addDateList(@NonNull String key, @NonNull List<BigInteger> values) {
-        final List<Date> list = values.stream().map(BigInteger::longValue).map(Date::new).collect(Collectors.toList());
+        final List<Date> list = values.stream().map(BigInteger::longValue).map(x -> x * 1000).map(Date::new).collect(Collectors.toList());
         this.addListAttribute(key, list, XAttributeTimestampImpl::new);
         LOGGER.info(String.format("Date list attribute %s added.", key));
     }
