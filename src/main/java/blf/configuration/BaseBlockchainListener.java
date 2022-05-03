@@ -462,16 +462,31 @@ public abstract class BaseBlockchainListener extends BcqlBaseListener {
                 .handleException("Parse tree error: binary boolean expression requires at least two predicates.", new Exception());
         }
 
-        if (!(this.genericFilterPredicates.peek() instanceof GenericFilterPredicateSpecification)) {
-            ExceptionHandler.getInstance().handleException(errorMsg, new Exception());
-        }
-        final GenericFilterPredicateSpecification predicate1 = (GenericFilterPredicateSpecification) this.genericFilterPredicates.pop();
-
-        if (!(this.genericFilterPredicates.peek() instanceof GenericFilterPredicateSpecification)) {
-            ExceptionHandler.getInstance().handleException(errorMsg, new Exception());
+        Object value1 = this.genericFilterPredicates.pop();
+        if (value1 instanceof ValueAccessorSpecification) {
+            value1 = GenericFilterPredicateSpecification.ofBooleanAccessor((ValueAccessorSpecification) value1);
         }
 
-        final GenericFilterPredicateSpecification predicate2 = (GenericFilterPredicateSpecification) this.genericFilterPredicates.pop();
+        if (!(value1 instanceof GenericFilterPredicateSpecification)) {
+            ExceptionHandler.getInstance().handleException(errorMsg, new Exception());
+
+            return;
+        }
+
+        Object value2 = this.genericFilterPredicates.pop();
+        if (value2 instanceof ValueAccessorSpecification) {
+            value2 = GenericFilterPredicateSpecification.ofBooleanAccessor((ValueAccessorSpecification) value2);
+        }
+
+        if (!(value2 instanceof GenericFilterPredicateSpecification)) {
+            ExceptionHandler.getInstance().handleException(errorMsg, new Exception());
+
+            return;
+        }
+
+        final GenericFilterPredicateSpecification predicate1 = (GenericFilterPredicateSpecification) value1;
+
+        final GenericFilterPredicateSpecification predicate2 = (GenericFilterPredicateSpecification) value2;
 
         this.genericFilterPredicates.push(constructor.apply(predicate1, predicate2));
     }
