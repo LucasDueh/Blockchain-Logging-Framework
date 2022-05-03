@@ -63,6 +63,7 @@ public class SpecificationComposer {
     public void prepareGenericFilterBuild() {
         this.prepareBuild(
             FactoryState.GENERIC_FILTER,
+            FactoryState.GENERIC_FILTER,
             FactoryState.BLOCK_RANGE_FILTER,
             FactoryState.TRANSACTION_FILTER,
             FactoryState.LOG_ENTRY_FILTER,
