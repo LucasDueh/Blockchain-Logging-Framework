@@ -75,9 +75,30 @@ https://user-images.githubusercontent.com/17274966/123259876-41be5200-d4f5-11eb-
     - To skip testing, add the option
       ```bash
       "-DskipTests"
-      ``` 
+      ```
 
 Now you're ready to develop!
+
+### Validate
+
+```
+cd Blockchain-Logging-Framework/target
+java -jar blf-cmd.jar validate path/to/manifest/file
+```
+
+### Extract
+
+The output folder specified in the manifest, needs to be created manually. For instance,
+
+```SET OUTPUT FOLDER "./output";```
+
+requires the existence of the associated folder.
+Then, run
+
+```
+cd Blockchain-Logging-Framework/target
+java -jar blf-cmd.jar extract path/to/manifest/file
+```
 
 ## Test
 
