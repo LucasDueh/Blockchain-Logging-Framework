@@ -88,7 +88,7 @@ java -jar blf-cmd.jar validate path/to/manifest/file
 
 ### Extract
 
-The output folder specified in the manifest, needs to be created manually. For instance,
+The output folder specified in the manifest, needs to be created manually. This means
 
 ```SET OUTPUT FOLDER "./output";```
 
