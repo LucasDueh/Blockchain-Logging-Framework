@@ -1,0 +1,131 @@
+SET BLOCKCHAIN "Ethereum";
+SET OUTPUT FOLDER "./output";
+SET ABORT ON EXCEPTION false;
+SET EMISSION MODE "default batching";
+SET CONNECTION "wss://eth-mainnet.alchemyapi.io/v2/43UD7sDV0NX1hgJIZZms5btltccfFqqN";
+
+
+int[] matches = newIntArray();
+BLOCKS (9112153) (9122153) {
+	LOG ENTRIES (0x37304b0AB297f13F5520c523102797121182fb5B) (
+		LogTrade(
+			address indexed takerAccount,
+			address indexed makerAccount,
+			uint256 indexed matchId,
+			uint256 orderHash,
+			uint8 orderDirection,
+			uint8 price,
+			uint256 longAmount,
+			int256 newLongPosition,
+			uint256 shortAmount,
+			int256 newShortPosition
+		)
+	){
+		bool containsMatch = contains(matches, matchId);
+		
+		IF(!containsMatch) {
+			add(matches, matchId);
+			EMIT XES EVENT ()(matchId)()("Match Created" as xs:string concept:name);
+		}
+		
+		EMIT XES EVENT ()(matchId)()(
+			"Positions Set" as xs:string concept:name,
+			block.timestamp as xs:date time:timestamp,
+			block.number as xs:int blockNumber,
+			takerAccount as xs:string takerAccount,
+			makerAccount as xs:string makerAccount,
+			matchId as xs:int matchId,
+			orderHash as xs:int orderHash,
+			orderDirection as xs:int orderDirection,
+			price as xs:int price,
+			longAmount as xs:int longAmount,
+			newLongPosition as xs:int newLongPosition,
+			shortAmount as xs:int shortAmount,
+			newShortPosition as xs:int newShortPosition
+		);
+	}
+
+	LOG ENTRIES (0x37304b0AB297f13F5520c523102797121182fb5B) (
+		LogTradeError(
+			address indexed takerAccount,
+			address indexed makerAccount,
+			uint256 indexed matchId,
+			uint256 orderHash,
+			uint16 status
+		)
+	){
+		bool containsMatch = contains(matches, matchId);
+
+		IF(!containsMatch) {
+			add(matches, matchId);
+			EMIT XES EVENT ()(matchId)()("Match Created" as xs:string concept:name);
+		}
+		
+		EMIT XES EVENT ()(matchId)()(
+			"Positions Set Error" as xs:string concept:name,
+			block.timestamp as xs:date time:timestamp,
+			block.number as xs:int blockNumber,
+			takerAccount as xs:string takerAccount,
+			makerAccount as xs:string makerAccount,
+			matchId as xs:int matchId,
+			orderHash as xs:int orderHash,
+			status as xs:int status
+		);
+	}
+
+	LOG ENTRIES (0x37304b0AB297f13F5520c523102797121182fb5B) (
+		LogOrderCancel(
+			address indexed account,
+			uint256 indexed matchId,
+			uint256 orderHash
+		)
+	){
+		bool containsMatch = contains(matches, matchId);
+		
+		IF(!containsMatch) {
+			add(matches, matchId);
+			EMIT XES EVENT ()(matchId)()("Match Created" as xs:string concept:name);
+		}
+		
+		EMIT XES EVENT ()(matchId)()(
+			"Position Cancelled" as xs:string concept:name,
+			block.timestamp as xs:date time:timestamp,
+			block.number as xs:int blockNumber,
+			account as xs:string account,
+			matchId as xs:int matchId,
+			orderHash as xs:int orderHash
+		);
+	}
+
+	LOG ENTRIES (0x37304b0AB297f13F5520c523102797121182fb5B) (
+		LogClaim(
+			address indexed account,
+			uint256 indexed matchId,
+			uint256 amount
+		)
+	){
+		EMIT XES EVENT ()(matchId)()(
+			"Reward Claimed" as xs:string concept:name,
+			block.timestamp as xs:date time:timestamp,
+			block.number as xs:int blockNumber,
+			account as xs:string account,
+			matchId as xs:int matchId,
+			amount as xs:int amount
+		);
+	}
+
+	LOG ENTRIES (0x37304b0AB297f13F5520c523102797121182fb5B) (
+		LogFinalizeMatch(
+			uint256 indexed matchId,
+			uint8 finalPrice
+		)
+	){
+		EMIT XES EVENT ()(matchId)()(
+			"Match Finalized" as xs:string concept:name,
+			block.timestamp as xs:date time:timestamp,
+			block.number as xs:int blockNumber,
+			matchId as xs:int matchId,
+			finalPrice as xs:int finalPrice
+		);
+	}
+}

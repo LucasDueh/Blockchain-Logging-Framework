@@ -1,0 +1,538 @@
+SET BLOCKCHAIN "Ethereum";
+SET OUTPUT FOLDER "./output";
+SET ABORT ON EXCEPTION false;
+SET EMISSION MODE "default batching";
+SET CONNECTION "wss://eth-mainnet.alchemyapi.io/v2/43UD7sDV0NX1hgJIZZms5btltccfFqqN";
+
+
+
+address fox        = 0x470e8de2eBaef52014A47Cb5E6aF86884947F08c;
+address[] pairs = newAddressArray();
+add(pairs, fox);
+
+// Pair created at block: 10104463
+BLOCKS (10104463) (10114463) {
+	// Factory
+	LOG ENTRIES (0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f) (
+		PairCreated(address indexed token0,address indexed token1,address pair)
+	){
+		bool contained = contains(pairs, pair);
+		IF (contained) {
+			EMIT XES TRACE ()(pair)(
+				block.timestamp as xs:date time:timestamp,
+				block.number as xs:int blockNumber,
+				token0 as xs:string token0,
+				token1 as xs:string token1,
+				pair as xs:string pair
+			);
+			
+			EMIT XES EVENT ()(pair)()(
+				"PairCreated" as xs:string concept:name,
+				block.timestamp as xs:date time:timestamp,
+				block.number as xs:int blockNumber,
+				token0 as xs:string token0,
+				token1 as xs:string token1,
+				pair as xs:string pair
+			);
+		}
+  }
+    
+	// Pair: FOX
+	LOG ENTRIES (fox) (
+		Burn(address indexed sender,uint256 amount0,uint256 amount1,address indexed to)
+	){
+		EMIT XES EVENT ()(fox)()(
+			"Tokens Burned" as xs:string concept:name,
+			block.timestamp as xs:date time:timestamp,
+			block.number as xs:int blockNumber,
+			sender as xs:string sender,
+			amount0 as xs:int amount0,
+			amount1 as xs:int amount1,
+			to as xs:string to
+		);
+	}
+	
+	LOG ENTRIES (fox) (
+		Mint(address indexed sender,uint256 amount0,uint256 amount1)
+	){
+		EMIT XES EVENT ()(fox)()(
+			"Tokens Minted" as xs:string concept:name,
+			block.timestamp as xs:date time:timestamp,
+			block.number as xs:int blockNumber,
+			sender as xs:string sender,
+			amount0 as xs:int amount0,
+			amount1 as xs:int amount1
+		);
+	}
+	
+	LOG ENTRIES (fox) (
+		Swap(address indexed sender,uint256 amount0In,uint256 amount1In,uint256 amount0Out,uint256 amount1Out,address indexed to)
+	){
+		EMIT XES EVENT ()(fox)()(
+			"Tokens Swapped" as xs:string concept:name,
+			block.timestamp as xs:date time:timestamp,
+			block.number as xs:int blockNumber,
+			sender as xs:string sender,
+			amount0In as xs:int amount0In,
+			amount1In as xs:int amount1In,
+			amount0Out as xs:int amount0Out,
+			amount1Out as xs:int amount1Out,
+			to as xs:string to
+		);
+	}
+	
+	LOG ENTRIES (fox) (
+		Sync(uint112 reserve0,uint112 reserve1)
+	){
+		EMIT XES EVENT ()(fox)()(
+			"Tokens Synced" as xs:string concept:name,
+			block.timestamp as xs:date time:timestamp,
+			block.number as xs:int blockNumber,
+			reserve0 as xs:int reserve0,
+			reserve1 as xs:int reserve1
+		);
+	}
+	
+	TRANSACTIONS () () {
+		TRANSACTION INPUT (fox) (
+			skim(address to)
+		){
+			EMIT XES EVENT ()(fox)()(
+				"Tokens Skimmed" as xs:string concept:name,
+				block.timestamp as xs:date time:timestamp,
+				block.number as xs:int blockNumber,
+				to as xs:string to
+			);
+		}
+	}
+  
+  // Router
+	TRANSACTIONS () () {
+    TRANSACTION INPUT (0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D) (
+    	addLiquidity(address tokenA,address tokenB,uint256 amountADesired,uint256 amountBDesired,uint256 amountAMin,uint256 amountBMin,address to,uint256 deadline)
+    ){
+      SMART CONTRACT (0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f) (
+      	address pairAddress = getPair(tokenA,tokenB)
+      ){
+        bool containsPair = contains(pairs, pairAddress);
+        IF(containsPair) {
+          EMIT XES EVENT ()(pairAddress)()(
+        	"Liquidity Added" as xs:string concept:name,
+        	block.timestamp as xs:date time:timestamp,
+        	block.number as xs:int blockNumber,
+        	"completed" as xs:string lifecycle:transition,
+        	tokenA as xs:string tokenA,
+        	tokenB as xs:string tokenB,
+        	amountADesired as xs:int amountADesired,
+        	amountBDesired as xs:int amountBDesired,
+        	amountAMin as xs:int amountAMin,
+        	amountBMin as xs:int amountBMin,
+        	to as xs:string to,
+        	deadline as xs:int deadline
+        );
+        }
+      }
+    }
+    
+    TRANSACTION INPUT (0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D) (
+      removeLiquidity(address tokenA,address tokenB,uint256 liquidity,uint256 amountAMin,uint256 amountBMin,address to,uint256 deadline)
+    ){
+      SMART CONTRACT (0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f) (address pairAddress = getPair(tokenA,tokenB)){
+        bool containsPair = contains(pairs, pairAddress);
+        IF(containsPair) {
+        	EMIT XES EVENT ()(pairAddress)()(
+        	"Liquidity Removed" as xs:string concept:name,
+        	block.timestamp as xs:date time:timestamp,
+        	block.number as xs:int blockNumber,
+        	"completed" as xs:string lifecycle:transition,
+        	tokenA as xs:string tokenA,
+        	tokenB as xs:string tokenB,
+        	liquidity as xs:int liquidity,
+        	amountAMin as xs:int amountAMin,
+        	amountBMin as xs:int amountBMin,
+        	to as xs:string to,
+        	deadline as xs:int deadline
+        );
+       }
+      }
+    }
+    
+    TRANSACTION INPUT (0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D) (
+    	addLiquidityETH(address token,uint256 amountTokenDesired,uint256 amountTokenMin,uint256 amountETHMin,address to,uint256 deadline)
+    ){
+    	bool containsPair = contains(pairs, token);
+    	IF(containsPair) {
+    	  EMIT XES EVENT ()(token)()(
+        	"ETH Liquidity Added" as xs:string concept:name,
+        	block.timestamp as xs:date time:timestamp,
+        	block.number as xs:int blockNumber,
+        	"completed" as xs:string lifecycle:transition,
+        	token as xs:string token,
+        	amountTokenDesired as xs:int amountTokenDesired,
+        	amountTokenMin as xs:int amountTokenMin,
+        	amountETHMin as xs:int amountETHMin,
+        	to as xs:string to,
+        	deadline as xs:int deadline
+        );
+    	}
+    }
+
+    TRANSACTION INPUT (0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D) (
+    	removeLiquidityETH(address token,uint256 liquidity,uint256 amountTokenMin,uint256 amountETHMin,address to,uint256 deadline)
+    ){
+    	bool containsPair = contains(pairs, token);
+      IF(containsPair) {
+        EMIT XES EVENT ()(token)()(
+        	"ETH Liquidity Removed" as xs:string concept:name,
+        	block.timestamp as xs:date time:timestamp,
+        	block.number as xs:int blockNumber,
+        	"completed" as xs:string lifecycle:transition,
+        	token as xs:string token,
+        	liquidity as xs:int liquidity,
+        	amountTokenMin as xs:int amountTokenMin,
+        	amountETHMin as xs:int amountETHMin,
+        	to as xs:string to,
+        	deadline as xs:int deadline
+        );
+      }
+    }
+
+    TRANSACTION INPUT (0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D) (
+    	removeLiquidityETHSupportingFeeOnTransferTokens(
+    		address token,
+    		uint256 liquidity,
+    		uint256 amountTokenMin,
+    		uint256 amountETHMin,
+    		address to,
+    		uint256 deadline
+    	)
+    ){
+    		bool containsPair = contains(pairs, token);
+        IF(containsPair) {
+        EMIT XES EVENT ()(token)()(
+        	"ETH Liquidity Removed SFOTT" as xs:string concept:name,
+        	block.timestamp as xs:date time:timestamp,
+        	block.number as xs:int blockNumber,
+        	"completed" as xs:string lifecycle:transition,
+        	token as xs:string token,
+        	liquidity as xs:int liquidity,
+        	amountTokenMin as xs:int amountTokenMin,
+        	amountETHMin as xs:int amountETHMin,
+        	to as xs:string to,
+        	deadline as xs:int deadline
+        );
+      }
+    }
+
+    TRANSACTION INPUT (0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D) (
+    	removeLiquidityETHWithPermit(address token,uint256 liquidity,uint256 amountTokenMin,uint256 amountETHMin,address to,uint256 deadline,bool approveMax,uint8 v,bytes32 r,bytes32 s)
+    ){
+    	bool containsPair = contains(pairs, token);
+      IF(containsPair) {
+      EMIT XES EVENT ()(token)()(
+      	"ETH Liquidity Removed WP" as xs:string concept:name,
+      	block.timestamp as xs:date time:timestamp,
+      	block.number as xs:int blockNumber,
+      	"completed" as xs:string lifecycle:transition,
+      	token as xs:string token,
+      	liquidity as xs:int liquidity,
+      	amountTokenMin as xs:int amountTokenMin,
+      	amountETHMin as xs:int amountETHMin,
+      	to as xs:string to,
+      	deadline as xs:int deadline,
+      	approveMax as xs:boolean approveMax,
+      	v as xs:int v,
+      	r as xs:string r,
+      	s as xs:string s
+      );
+      }
+    }
+
+    TRANSACTION INPUT (0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D) (
+    	removeLiquidityETHWithPermitSupportingFeeOnTransferTokens(address token,uint256 liquidity,uint256 amountTokenMin,uint256 amountETHMin,address to,uint256 deadline,bool approveMax,uint8 v,bytes32 r,bytes32 s)
+    ){
+      bool containsPair = contains(pairs, token);
+      IF(containsPair) {
+      	EMIT XES EVENT ()(token)()(
+        	"ETH Liquidity Removed WPSFOTT" as xs:string concept:name,
+        	block.timestamp as xs:date time:timestamp,
+        	block.number as xs:int blockNumber,
+        	"completed" as xs:string lifecycle:transition,
+        	token as xs:string token,
+        	liquidity as xs:int liquidity,
+        	amountTokenMin as xs:int amountTokenMin,
+        	amountETHMin as xs:int amountETHMin,
+        	to as xs:string to,
+        	deadline as xs:int deadline,
+        	approveMax as xs:boolean approveMax,
+        	v as xs:int v,
+        	r as xs:string r,
+        	s as xs:string s
+      	);
+      }
+    }
+
+    TRANSACTION INPUT (0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D) (
+    	removeLiquidityWithPermit(address tokenA,address tokenB,uint256 liquidity,uint256 amountAMin,uint256 amountBMin,address to,uint256 deadline,bool approveMax,uint8 v,bytes32 r,bytes32 s)
+    ){
+      SMART CONTRACT (0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f) (address pairAddress = getPair(tokenA,tokenB)){
+        bool containsPair = contains(pairs, pairAddress);
+        IF(containsPair) {
+          EMIT XES EVENT ()(pairAddress)()(
+          	"Liquidity Removed WP" as xs:string concept:name,
+          	block.timestamp as xs:date time:timestamp,
+          	block.number as xs:int blockNumber,
+          	"completed" as xs:string lifecycle:transition,
+          	tokenA as xs:string tokenA,
+          	tokenB as xs:string tokenB,
+          	liquidity as xs:int liquidity,
+          	amountAMin as xs:int amountAMin,
+          	amountBMin as xs:int amountBMin,
+          	to as xs:string to,
+          	deadline as xs:int deadline,
+          	approveMax as xs:boolean approveMax,
+          	v as xs:int v,
+          	r as xs:string r,
+          	s as xs:string s
+          );
+        }
+      }
+    }
+
+    TRANSACTION INPUT (0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D) (
+    	swapExactTokensForETH(uint256 amountIn,uint256 amountOutMin,address[] path,address to,uint256 deadline)
+    ){
+      address tokenA = get(path, 0);
+      address tokenB = get(path, 1);
+    	SMART CONTRACT (0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f) (address pairAddress = getPair(tokenA,tokenB)){
+        bool containsPair = contains(pairs, pairAddress);
+        IF(containsPair) {
+          EMIT XES EVENT ()(pairAddress)()(
+          	"Swapped Exact Tokens For ETH" as xs:string concept:name,
+          	block.timestamp as xs:date time:timestamp,
+          	block.number as xs:int blockNumber,
+          	"completed" as xs:string lifecycle:transition,
+          	tokenA as xs:string tokenA,
+          	tokenB as xs:string tokenB,
+          	amountIn as xs:int amountIn,
+          	amountOutMin as xs:int amountOutMin,
+          	to as xs:string to,
+          	deadline as xs:int deadline
+          );
+        }
+      }
+    }
+
+    TRANSACTION INPUT (0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D) (
+    	swapExactTokensForETHSupportingFeeOnTransferTokens(
+    		uint256 amountIn,
+    		uint256 amountOutMin,
+    		address[] path,
+    		address to,
+    		uint256 deadline
+    	)
+    ){
+      address tokenA = get(path, 0);
+      address tokenB = get(path, 1);
+    	SMART CONTRACT (0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f) (address pairAddress = getPair(tokenA,tokenB)){
+        bool containsPair = contains(pairs, pairAddress);
+        IF(containsPair) {
+          EMIT XES EVENT ()(pairAddress)()(
+          	"Swapped Exact Tokens For ETH SFOTT" as xs:string concept:name,
+          	block.timestamp as xs:date time:timestamp,
+          	block.number as xs:int blockNumber,
+          	"completed" as xs:string lifecycle:transition,
+          	tokenA as xs:string tokenA,
+          	tokenB as xs:string tokenB,
+          	amountIn as xs:int amountIn,
+          	amountOutMin as xs:int amountOutMin,
+          	to as xs:string to,
+          	deadline as xs:int deadline
+          );
+        }
+      }
+    }
+    
+    TRANSACTION INPUT (0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D) (
+    	swapExactTokensForTokens(
+    		uint256 amountIn,
+    		uint256 amountOutMin,
+    		address[] path,
+    		address to,
+    		uint256 deadline
+    	)
+    ){
+      address tokenA = get(path, 0);
+      address tokenB = get(path, 1);
+    	SMART CONTRACT (0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f) (address pairAddress = getPair(tokenA,tokenB)){
+    	  bool containsPair = contains(pairs, pairAddress);
+    	  IF(containsPair) {
+        	EMIT XES EVENT ()(pairAddress)()(
+          	"Swapped Exact Tokens for Exact Tokens" as xs:string concept:name,
+          	block.timestamp as xs:date time:timestamp,
+          	block.number as xs:int blockNumber,
+          	"completed" as xs:string lifecycle:transition,
+          	tokenA as xs:string tokenA,
+          	tokenB as xs:string tokenB,
+          	amountIn as xs:int amountIn,
+          	amountOutMin as xs:int amountOutMin,
+          	to as xs:string to,
+          	deadline as xs:int deadline
+          );
+    	  }
+      }
+    }
+    
+    TRANSACTION INPUT (0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D) (
+    	swapExactTokensForTokensSupportingFeeOnTransferTokens(
+    		uint256 amountIn,
+    		uint256 amountOutMin,
+    		address[] path,
+    		address to,
+    		uint256 deadline
+    	)
+    ){
+    	address tokenA = get(path, 0);
+      address tokenB = get(path, 1);
+    	SMART CONTRACT (0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f) (address pairAddress = getPair(tokenA,tokenB)){
+    	  bool containsPair = contains(pairs, pairAddress);
+    	  IF(containsPair) {
+    	    EMIT XES EVENT ()(pairAddress)()(
+          	"Swapped Exact Tokens For Tokens SFOTT" as xs:string concept:name,
+          	block.timestamp as xs:date time:timestamp,
+          	block.number as xs:int blockNumber,
+          	"completed" as xs:string lifecycle:transition,
+          	tokenA as xs:string tokenA,
+            tokenB as xs:string tokenB,
+          	amountIn as xs:int amountIn,
+          	amountOutMin as xs:int amountOutMin,
+          	to as xs:string to,
+          	deadline as xs:int deadline
+          );
+         }
+    	}
+    }
+    
+    TRANSACTION INPUT (0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D) (
+    	swapTokensForExactETH(uint256 amountOut,uint256 amountInMax,address[] path,address to,uint256 deadline)
+    ){
+    	address tokenA = get(path, 0);
+      address tokenB = get(path, 1);
+    	SMART CONTRACT (0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f) (address pairAddress = getPair(tokenA,tokenB)){
+    	  bool containsPair = contains(pairs, pairAddress);
+    	  IF(containsPair) {
+    	    EMIT XES EVENT ()(pairAddress)()(
+          	"Swapped Tokens For Exact ETH" as xs:string concept:name,
+          	block.timestamp as xs:date time:timestamp,
+          	block.number as xs:int blockNumber,
+          	"completed" as xs:string lifecycle:transition,
+          	tokenA as xs:string tokenA,
+            tokenB as xs:string tokenB,
+          	amountOut as xs:int amountOut,
+          	amountInMax as xs:int amountInMax,
+          	to as xs:string to,
+          	deadline as xs:int deadline
+          );
+        }
+      }
+    }
+    
+    TRANSACTION INPUT (0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D) (
+    	swapTokensForExactTokens(uint256 amountOut,uint256 amountInMax,address[] path,address to,uint256 deadline)
+    ){
+    	address tokenA = get(path, 0);
+      address tokenB = get(path, 1);
+    	SMART CONTRACT (0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f) (address pairAddress = getPair(tokenA,tokenB)){
+    	  bool containsPair = contains(pairs, pairAddress);
+    	  IF(containsPair) {
+        	EMIT XES EVENT ()(pairAddress)()(
+          	"Swapped Tokens For Exact Tokens" as xs:string concept:name,
+          	block.timestamp as xs:date time:timestamp,
+          	block.number as xs:int blockNumber,
+          	"completed" as xs:string lifecycle:transition,
+          	tokenA as xs:string tokenA,
+            tokenB as xs:string tokenB,
+          	amountOut as xs:int amountOut,
+          	amountInMax as xs:int amountInMax,
+          	to as xs:string to,
+          	deadline as xs:int deadline
+          );
+        }
+      }
+    }
+    
+    TRANSACTION INPUT (0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D) (
+	    swapETHForExactTokens(uint256 amountOut,address[] path,address to,uint256 deadline)
+  ){
+	  address tokenA = get(path, 0);
+    address tokenB = get(path, 1);
+    SMART CONTRACT (0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f) (address pairAddress = getPair(tokenA,tokenB)){
+      bool containsPair = contains(pairs, pairAddress);
+    	IF(containsPair) {
+    	  EMIT XES EVENT ()(pairAddress)()(
+        	"Swapped ETH For Exact Tokens" as xs:string concept:name,
+        	block.timestamp as xs:date time:timestamp,
+        	block.number as xs:int blockNumber,
+        	"completed" as xs:string lifecycle:transition,
+          tokenA as xs:string tokenA,
+          tokenB as xs:string tokenB,
+        	amountOut as xs:int amountOut,
+        	to as xs:string to,
+        	deadline as xs:int deadline
+        );
+      }
+    }
+  }
+
+    TRANSACTION INPUT (0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D) (
+    	swapExactETHForTokens(
+    		uint256 amountOutMin,
+    		address[] path,
+    		address to,
+    		uint256 deadline
+    	)
+    ){
+  	  address tokenA = get(path, 0);
+      address tokenB = get(path, 1);
+      SMART CONTRACT (0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f) (address pairAddress = getPair(tokenA,tokenB)){
+        bool containsPair = contains(pairs, pairAddress);
+      	IF(containsPair) {
+        	EMIT XES EVENT ()(pairAddress)()(
+          	"Swapped Exact ETH For Tokens" as xs:string concept:name,
+          	block.timestamp as xs:date time:timestamp,
+          	block.number as xs:int blockNumber,
+          	"completed" as xs:string lifecycle:transition,
+            tokenA as xs:string tokenA,
+            tokenB as xs:string tokenB,
+          	amountOutMin as xs:int amountOutMin,
+          	to as xs:string to,
+          	deadline as xs:int deadline
+          );
+        }
+      }
+    }
+
+    TRANSACTION INPUT (0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D) (
+    	swapExactETHForTokensSupportingFeeOnTransferTokens(uint256 amountOutMin,address[] path,address to,uint256 deadline)
+    ){
+      address tokenA = get(path, 0);
+      address tokenB = get(path, 1);
+      SMART CONTRACT (0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f) (address pairAddress = getPair(tokenA,tokenB)){
+        bool containsPair = contains(pairs, pairAddress);
+      	IF(containsPair) {
+        	EMIT XES EVENT ()(pairAddress)()(
+          	"Swapped Exact ETH For Tokens SFOTT" as xs:string concept:name,
+          	block.timestamp as xs:date time:timestamp,
+          	block.number as xs:int blockNumber,
+          	"completed" as xs:string lifecycle:transition,
+            tokenA as xs:string tokenA,
+            tokenB as xs:string tokenB,
+          	amountOutMin as xs:int amountOutMin,
+          	to as xs:string to,
+          	deadline as xs:int deadline
+          );
+        }
+      }
+    }
+  }
+}

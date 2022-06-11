@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- This file has been generated with the OpenXES library. It conforms -->
+<!-- to the XML serialization of the XES standard for log storage and -->
+<!-- management. -->
+<!-- XES standard version: 1.0 -->
+<!-- OpenXES library version: 1.0RC7 -->
+<!-- OpenXES is available from http://www.openxes.org/ -->
+<log xes.version="1.0" xes.features="nested-attributes" openxes.version="1.0RC7">
+	<extension name="Time" prefix="time" uri="http://www.xes-standard.org/time.xesext"/>
+	<extension name="Lifecycle" prefix="lifecycle" uri="http://www.xes-standard.org/lifecycle.xesext"/>
+	<extension name="Concept" prefix="concept" uri="http://www.xes-standard.org/concept.xesext"/>
+
+	<global scope="event">
+		<string key="concept:name" value="no global value provided"/>
+		<date key="time:timestamp" value="1970-01-01T10:00:00+10:00"/>
+		<string key="lifecycle:transition" value="Completed"/>
+	</global>
+
+	<string key="ident:pid" value="pid0"/>
+	<string key="lifcycle:model" value="bpaf"/>
+
+	<trace>
+		<string key="ident:piid" value="0x9ad4a47e223312b4d8b15d514bd1f7fb7ee6ab8b"/>
+		<event>
+			<int key="shares" value="-3329413711779338928"/>
+			<string key="concept:name" value="withdrawUnderlying()"/>
+			<string key="yieldToken" value="0xda816459f1ab5631232fe5e97a05bbbb94970c95"/>
+			<string key="ident:eid" value="eid4"/>
+			<int key="blockNumber" value="14757207"/>
+			<string key="recipient" value="0x9ad4a47e223312b4d8b15d514bd1f7fb7ee6ab8b"/>
+			<int key="minimumAmountOut" value="-8579071526720608083"/>
+			<date key="time:timestamp" value="2022-05-11T23:21:26+02:00"/>
+			<string key="lifecycle:transition" value="complete"/>
+		</event>
+	</trace>
+
+	<trace>
+		<string key="ident:piid" value="0xa4b2adb7c0afef6542af0bf25cafc818e9295681"/>
+		<event>
+			<int key="shares" value="-2220862141333391903"/>
+			<string key="concept:name" value="withdrawUnderlying()"/>
+			<string key="yieldToken" value="0xda816459f1ab5631232fe5e97a05bbbb94970c95"/>
+			<string key="ident:eid" value="eid2"/>
+			<int key="blockNumber" value="14756867"/>
+			<string key="recipient" value="0xa4b2adb7c0afef6542af0bf25cafc818e9295681"/>
+			<int key="minimumAmountOut" value="4877067720969810033"/>
+			<date key="time:timestamp" value="2022-05-11T21:59:30+02:00"/>
+			<string key="lifecycle:transition" value="complete"/>
+		</event>
+		<event>
+			<int key="shares" value="-2783365484019519862"/>
+			<string key="concept:name" value="withdrawUnderlying()"/>
+			<string key="yieldToken" value="0xda816459f1ab5631232fe5e97a05bbbb94970c95"/>
+			<string key="ident:eid" value="eid3"/>
+			<int key="blockNumber" value="14756871"/>
+			<string key="recipient" value="0xa4b2adb7c0afef6542af0bf25cafc818e9295681"/>
+			<int key="minimumAmountOut" value="4329582198803372915"/>
+			<date key="time:timestamp" value="2022-05-11T22:00:30+02:00"/>
+			<string key="lifecycle:transition" value="complete"/>
+		</event>
+	</trace>
+	
+
+	<trace>
+		<string key="ident:piid" value="0xb1ad39c80d7f0039d904149e2841f53f2a938825"/>
+		<event>
+			<int key="shares" value="9925617423"/>
+			<string key="concept:name" value="withdrawUnderlying()"/>
+			<string key="yieldToken" value="0xa354f35829ae975e850e23e9615b11da1b3dc4de"/>
+			<string key="ident:eid" value="eid0"/>
+			<int key="blockNumber" value="14756357"/>
+			<string key="recipient" value="0xb1ad39c80d7f0039d904149e2841f53f2a938825"/>
+			<int key="minimumAmountOut" value="9764584855"/>
+			<date key="time:timestamp" value="2022-05-11T20:08:50+02:00"/>
+			<string key="lifecycle:transition" value="complete"/>
+		</event>
+	</trace>	
+
+	<trace>
+		<string key="ident:piid" value="0xf6077f70d4fea8a77c53f437ed6a46b412cc348c"/>
+		<event>
+			<int key="shares" value="124942070628"/>
+			<string key="concept:name" value="liquidate()"/>
+			<string key="yieldToken" value="0xa354f35829ae975e850e23e9615b11da1b3dc4de"/>
+			<string key="ident:eid" value="eid11"/>
+			<int key="blockNumber" value="14759664"/>
+			<int key="minimumAmountOut" value="122667"/>
+			<date key="time:timestamp" value="2022-05-12T08:54:42+02:00"/>
+			<string key="lifecycle:transition" value="complete"/>
+		</event>
+		<event>
+			<int key="shares" value="124127651573"/>
+			<string key="concept:name" value="withdrawUnderlying()"/>
+			<string key="yieldToken" value="0xa354f35829ae975e850e23e9615b11da1b3dc4de"/>
+			<string key="ident:eid" value="eid12"/>
+			<int key="blockNumber" value="14759667"/>
+			<string key="recipient" value="0xf6077f70d4fea8a77c53f437ed6a46b412cc348c"/>
+			<int key="minimumAmountOut" value="121867420409"/>
+			<date key="time:timestamp" value="2022-05-12T08:55:56+02:00"/>
+			<string key="lifecycle:transition" value="complete"/>
+		</event>
+	</trace>	
+
+	<trace>
+		<string key="ident:piid" value="0x391fb1b5babd261cd0c42b91460859f546d7ca9b"/>
+		<event>
+			<string key="underlyingToken" value="0xdac17f958d2ee523a2206206994597c13d831ec7"/>
+			<string key="concept:name" value="setUnderlyingTokenEnabled()"/>
+			<string key="ident:eid" value="eid10"/>
+			<date key="time:timestamp" value="2022-05-12T08:48:54+02:00"/>
+			<boolean key="enabled" value="false"/>
+			<int key="blockNumber" value="14759638"/>
+			<string key="lifecycle:transition" value="complete"/>
+		</event>
+	</trace>
+
+	<trace>
+		<string key="ident:piid" value="0xe7f757ce6160bf0fc0956b00bf9dd89cca4f0ead"/>
+		<event>
+			<int key="amount" value="4219782348"/>
+			<string key="concept:name" value="depositUnderlying()"/>
+			<string key="yieldToken" value="0xa354f35829ae975e850e23e9615b11da1b3dc4de"/>
+			<string key="ident:eid" value="eid6"/>
+			<int key="blockNumber" value="14759499"/>
+			<string key="recipient" value="0xe7f757ce6160bf0fc0956b00bf9dd89cca4f0ead"/>
+			<int key="minimumAmountOut" value="4142944646"/>
+			<date key="time:timestamp" value="2022-05-12T08:19:56+02:00"/>
+			<string key="lifecycle:transition" value="complete"/>
+		</event>
+	</trace>
+
+	<trace>
+		<string key="ident:piid" value="0x37b3a715a9507c85c1845168ff1801799dacf808"/>
+		<event>
+			<int key="shares" value="-4387343867927651130"/>
+			<string key="concept:name" value="liquidate()"/>
+			<string key="yieldToken" value="0xda816459f1ab5631232fe5e97a05bbbb94970c95"/>
+			<string key="ident:eid" value="eid5"/>
+			<int key="blockNumber" value="14759498"/>
+			<int key="minimumAmountOut" value="61381"/>
+			<date key="time:timestamp" value="2022-05-12T08:19:48+02:00"/>
+			<string key="lifecycle:transition" value="complete"/>
+		</event>
+		<event>
+			<int key="shares" value="32670093481"/>
+			<string key="concept:name" value="withdrawUnderlying()"/>
+			<string key="yieldToken" value="0xa354f35829ae975e850e23e9615b11da1b3dc4de"/>
+			<string key="ident:eid" value="eid7"/>
+			<int key="blockNumber" value="14759501"/>
+			<string key="recipient" value="0x37b3a715a9507c85c1845168ff1801799dacf808"/>
+			<int key="minimumAmountOut" value="32075206181"/>
+			<date key="time:timestamp" value="2022-05-12T08:20:36+02:00"/>
+			<string key="lifecycle:transition" value="complete"/>
+		</event>
+		<event>
+			<int key="shares" value="637242444387831946"/>
+			<string key="concept:name" value="withdrawUnderlying()"/>
+			<string key="yieldToken" value="0xda816459f1ab5631232fe5e97a05bbbb94970c95"/>
+			<string key="ident:eid" value="eid8"/>
+			<int key="blockNumber" value="14759502"/>
+			<string key="recipient" value="0x37b3a715a9507c85c1845168ff1801799dacf808"/>
+			<int key="minimumAmountOut" value="-6074173492819839255"/>
+			<date key="time:timestamp" value="2022-05-12T08:20:51+02:00"/>
+			<string key="lifecycle:transition" value="complete"/>
+		</event>
+	</trace>
+
+	<trace>
+		<string key="ident:piid" value="0xd32f25dfa932b8064a81b8254e7997caebc85f97"/>
+		<event>
+			<int key="amount" value="46978000000"/>
+			<string key="concept:name" value="repay()"/>
+			<string key="ident:eid" value="eid0"/>
+			<int key="blockNumber" value="14759160"/>
+			<string key="underlyingToken" value="0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"/>
+			<string key="recipient" value="0xd32f25dfa932b8064a81b8254e7997caebc85f97"/>
+			<date key="time:timestamp" value="2022-05-12T07:01:30+02:00"/>
+			<string key="lifecycle:transition" value="complete"/>
+		</event>
+		<event>
+			<int key="shares" value="6143550703061321719"/>
+			<string key="concept:name" value="withdrawUnderlying()"/>
+			<string key="yieldToken" value="0xda816459f1ab5631232fe5e97a05bbbb94970c95"/>
+			<string key="ident:eid" value="eid1"/>
+			<int key="blockNumber" value="14759171"/>
+			<string key="recipient" value="0xd32f25dfa932b8064a81b8254e7997caebc85f97"/>
+			<int key="minimumAmountOut" value="-1719926922969007128"/>
+			<date key="time:timestamp" value="2022-05-12T07:04:04+02:00"/>
+			<string key="lifecycle:transition" value="complete"/>
+		</event>
+		<event>
+			<int key="shares" value="17092458673"/>
+			<string key="concept:name" value="withdrawUnderlying()"/>
+			<string key="yieldToken" value="0x7da96a3891add058ada2e826306d812c638d87a7"/>
+			<string key="ident:eid" value="eid2"/>
+			<int key="blockNumber" value="14759174"/>
+			<string key="recipient" value="0xd32f25dfa932b8064a81b8254e7997caebc85f97"/>
+			<int key="minimumAmountOut" value="16220551172"/>
+			<date key="time:timestamp" value="2022-05-12T07:04:33+02:00"/>
+			<string key="lifecycle:transition" value="complete"/>
+		</event>
+		<event>
+			<int key="amount" value="77337904685"/>
+			<string key="concept:name" value="depositUnderlying()"/>
+			<string key="yieldToken" value="0xa354f35829ae975e850e23e9615b11da1b3dc4de"/>
+			<string key="ident:eid" value="eid3"/>
+			<int key="blockNumber" value="14759245"/>
+			<string key="recipient" value="0xd32f25dfa932b8064a81b8254e7997caebc85f97"/>
+			<int key="minimumAmountOut" value="75929664538"/>
+			<date key="time:timestamp" value="2022-05-12T07:23:00+02:00"/>
+			<string key="lifecycle:transition" value="complete"/>
+		</event>
+	</trace>
+
+	<trace>
+		<string key="ident:piid" value="0xd674d9dbea02b7457408ed2cd21051498ec8d13c"/>
+		<event>
+			<int key="shares" value="-3742010067161676305"/>
+			<string key="concept:name" value="liquidate()"/>
+			<string key="yieldToken" value="0xda816459f1ab5631232fe5e97a05bbbb94970c95"/>
+			<string key="ident:eid" value="eid0"/>
+			<int key="blockNumber" value="14761813"/>
+			<int key="minimumAmountOut" value="57538"/>
+			<date key="time:timestamp" value="2022-05-12T17:20:53+02:00"/>
+			<string key="lifecycle:transition" value="complete"/>
+		</event>
+		<event>
+			<int key="shares" value="-800951842931249641"/>
+			<string key="concept:name" value="withdrawUnderlying()"/>
+			<string key="yieldToken" value="0xda816459f1ab5631232fe5e97a05bbbb94970c95"/>
+			<string key="ident:eid" value="eid0"/>
+			<int key="blockNumber" value="14762247"/>
+			<string key="recipient" value="0xd674d9dbea02b7457408ed2cd21051498ec8d13c"/>
+			<int key="minimumAmountOut" value="-2517406639135439157"/>
+			<date key="time:timestamp" value="2022-05-12T18:56:47+02:00"/>
+			<string key="lifecycle:transition" value="complete"/>
+		</event>
+		
+	</trace>
+
+	<trace>
+		<string key="ident:piid" value="0x50acc1281845be0ac6936b4d7ad6a14ae613c1c9"/>
+		<event>
+			<int key="shares" value="3822374755948436736"/>
+			<string key="concept:name" value="withdrawUnderlying()"/>
+			<string key="yieldToken" value="0xda816459f1ab5631232fe5e97a05bbbb94970c95"/>
+			<string key="ident:eid" value="eid1"/>
+			<int key="blockNumber" value="14764974"/>
+			<string key="recipient" value="0x50acc1281845be0ac6936b4d7ad6a14ae613c1c9"/>
+			<int key="minimumAmountOut" value="-6539427502478621077"/>
+			<date key="time:timestamp" value="2022-05-13T05:18:59+02:00"/>
+			<string key="lifecycle:transition" value="complete"/>
+		</event>
+		<event>
+			<int key="shares" value="3456807944079192816"/>
+			<string key="concept:name" value="withdrawUnderlying()"/>
+			<string key="yieldToken" value="0xda816459f1ab5631232fe5e97a05bbbb94970c95"/>
+			<string key="ident:eid" value="eid3"/>
+			<int key="blockNumber" value="14765008"/>
+			<string key="recipient" value="0x50acc1281845be0ac6936b4d7ad6a14ae613c1c9"/>
+			<int key="minimumAmountOut" value="-4798272231803355817"/>
+			<date key="time:timestamp" value="2022-05-13T05:25:10+02:00"/>
+			<string key="lifecycle:transition" value="complete"/>
+		</event>
+		<event>
+			<int key="shares" value="-3597473173372027333"/>
+			<string key="concept:name" value="withdrawUnderlying()"/>
+			<string key="yieldToken" value="0xda816459f1ab5631232fe5e97a05bbbb94970c95"/>
+			<string key="ident:eid" value="eid5"/>
+			<int key="blockNumber" value="14765019"/>
+			<string key="recipient" value="0x50acc1281845be0ac6936b4d7ad6a14ae613c1c9"/>
+			<int key="minimumAmountOut" value="1256469994391232098"/>
+			<date key="time:timestamp" value="2022-05-13T05:28:53+02:00"/>
+			<string key="lifecycle:transition" value="complete"/>
+		</event>
+		<event>
+			<int key="shares" value="346854827717"/>
+			<string key="concept:name" value="withdrawUnderlying()"/>
+			<string key="yieldToken" value="0xa354f35829ae975e850e23e9615b11da1b3dc4de"/>
+			<string key="ident:eid" value="eid6"/>
+			<int key="blockNumber" value="14765024"/>
+			<string key="recipient" value="0x50acc1281845be0ac6936b4d7ad6a14ae613c1c9"/>
+			<int key="minimumAmountOut" value="340534949905"/>
+			<date key="time:timestamp" value="2022-05-13T05:30:42+02:00"/>
+			<string key="lifecycle:transition" value="complete"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="ident:piid" value="0x9cce756aa16355f07268526d30425ee35135e664"/>
+		<event>
+			<int key="shares" value="-9123183826594430976"/>
+			<string key="concept:name" value="liquidate()"/>
+			<string key="yieldToken" value="0xda816459f1ab5631232fe5e97a05bbbb94970c95"/>
+			<string key="ident:eid" value="eid8"/>
+			<int key="blockNumber" value="14765151"/>
+			<int key="minimumAmountOut" value="48453"/>
+			<date key="time:timestamp" value="2022-05-13T06:03:23+02:00"/>
+			<string key="lifecycle:transition" value="complete"/>
+		</event>
+		<event>
+			<int key="shares" value="601129261562068992"/>
+			<string key="concept:name" value="liquidate()"/>
+			<string key="yieldToken" value="0xda816459f1ab5631232fe5e97a05bbbb94970c95"/>
+			<string key="ident:eid" value="eid9"/>
+			<int key="blockNumber" value="14765155"/>
+			<int key="minimumAmountOut" value="290714"/>
+			<date key="time:timestamp" value="2022-05-13T06:04:51+02:00"/>
+			<string key="lifecycle:transition" value="complete"/>
+		</event>
+		<event>
+			<int key="shares" value="200376420520689664"/>
+			<string key="concept:name" value="liquidate()"/>
+			<string key="yieldToken" value="0xda816459f1ab5631232fe5e97a05bbbb94970c95"/>
+			<string key="ident:eid" value="eid10"/>
+			<int key="blockNumber" value="14765162"/>
+			<int key="minimumAmountOut" value="96711"/>
+			<date key="time:timestamp" value="2022-05-13T06:06:51+02:00"/>
+			<string key="lifecycle:transition" value="complete"/>
+		</event>
+		<event>
+			<int key="shares" value="200376420520689664"/>
+			<string key="concept:name" value="liquidate()"/>
+			<string key="yieldToken" value="0xda816459f1ab5631232fe5e97a05bbbb94970c95"/>
+			<string key="ident:eid" value="eid11"/>
+			<int key="blockNumber" value="14765165"/>
+			<int key="minimumAmountOut" value="96905"/>
+			<date key="time:timestamp" value="2022-05-13T06:07:42+02:00"/>
+			<string key="lifecycle:transition" value="complete"/>
+		</event>
+		<event>
+			<int key="shares" value="200376420520689664"/>
+			<string key="concept:name" value="liquidate()"/>
+			<string key="yieldToken" value="0xda816459f1ab5631232fe5e97a05bbbb94970c95"/>
+			<string key="ident:eid" value="eid12"/>
+			<int key="blockNumber" value="14765168"/>
+			<int key="minimumAmountOut" value="96711"/>
+			<date key="time:timestamp" value="2022-05-13T06:08:26+02:00"/>
+			<string key="lifecycle:transition" value="complete"/>
+		</event>
+		<event>
+			<int key="shares" value="5752634150124053793"/>
+			<string key="concept:name" value="liquidate()"/>
+			<string key="yieldToken" value="0xda816459f1ab5631232fe5e97a05bbbb94970c95"/>
+			<string key="ident:eid" value="eid13"/>
+			<int key="blockNumber" value="14765171"/>
+			<int key="minimumAmountOut" value="249247"/>
+			<date key="time:timestamp" value="2022-05-13T06:09:24+02:00"/>
+			<string key="lifecycle:transition" value="complete"/>
+		</event>
+		<event>
+			<int key="shares" value="-2028881880587720095"/>
+			<string key="concept:name" value="withdrawUnderlying()"/>
+			<string key="yieldToken" value="0xda816459f1ab5631232fe5e97a05bbbb94970c95"/>
+			<string key="ident:eid" value="eid14"/>
+			<int key="blockNumber" value="14765178"/>
+			<string key="recipient" value="0x9cce756aa16355f07268526d30425ee35135e664"/>
+			<int key="minimumAmountOut" value="-3614942164608992430"/>
+			<date key="time:timestamp" value="2022-05-13T06:10:42+02:00"/>
+			<string key="lifecycle:transition" value="complete"/>
+		</event>
+		<event>
+			<int key="shares" value="843031061128"/>
+			<string key="concept:name" value="withdrawUnderlying()"/>
+			<string key="yieldToken" value="0xa354f35829ae975e850e23e9615b11da1b3dc4de"/>
+			<string key="ident:eid" value="eid15"/>
+			<int key="blockNumber" value="14765185"/>
+			<string key="recipient" value="0x9cce756aa16355f07268526d30425ee35135e664"/>
+			<int key="minimumAmountOut" value="827669775742"/>
+			<date key="time:timestamp" value="2022-05-13T06:11:38+02:00"/>
+			<string key="lifecycle:transition" value="complete"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="ident:piid" value="0x26c7bcd61784450aa355ab90116264c8f2e0f758"/>
+		<event>
+			<int key="shares" value="-1630585195963590499"/>
+			<string key="concept:name" value="liquidate()"/>
+			<string key="yieldToken" value="0xda816459f1ab5631232fe5e97a05bbbb94970c95"/>
+			<string key="ident:eid" value="eid16"/>
+			<int key="blockNumber" value="14765364"/>
+			<int key="minimumAmountOut" value="29011"/>
+			<date key="time:timestamp" value="2022-05-13T06:55:01+02:00"/>
+			<string key="lifecycle:transition" value="complete"/>
+		</event>
+		<event>
+			<int key="shares" value="-6889883721793708321"/>
+			<string key="concept:name" value="withdrawUnderlying()"/>
+			<string key="yieldToken" value="0xda816459f1ab5631232fe5e97a05bbbb94970c95"/>
+			<string key="ident:eid" value="eid17"/>
+			<int key="blockNumber" value="14765451"/>
+			<string key="recipient" value="0x26c7bcd61784450aa355ab90116264c8f2e0f758"/>
+			<int key="minimumAmountOut" value="1255900814669143016"/>
+			<date key="time:timestamp" value="2022-05-13T07:15:18+02:00"/>
+			<string key="lifecycle:transition" value="complete"/>
+		</event>
+	</trace>	
+</log>

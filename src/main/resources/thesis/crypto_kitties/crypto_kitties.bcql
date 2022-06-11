@@ -1,0 +1,657 @@
+SET BLOCKCHAIN "Ethereum";
+SET OUTPUT FOLDER "./output";
+SET ABORT ON EXCEPTION false;
+SET EMISSION MODE "default batching";
+SET CONNECTION "wss://eth-mainnet.alchemyapi.io/v2/43UD7sDV0NX1hgJIZZms5btltccfFqqN";
+
+
+int[] kitties = newIntArray();
+BLOCKS (14695000) (14718000) {
+  TRANSACTIONS () () {
+    // Birth
+    bool giveBirth = false;
+    TRANSACTION INPUT (0x06012c8cf97BEaD5deAe237070F9587f8E7A266d) (
+      giveBirth(uint256 _matronId)
+    ){
+      giveBirth = true;
+    }
+    
+    LOG ENTRIES (0x06012c8cf97BEaD5deAe237070F9587f8E7A266d) (
+      Birth(address owner,uint256 kittyId,uint256 matronId,uint256 sireId,uint256 genes)
+    ){
+      add(kitties, kittyId);
+      
+      IF (giveBirth) {
+        EMIT XES EVENT ()(kittyId)()(
+          "giveBirth()" as xs:string concept:name,
+          block.timestamp as xs:date time:timestamp,
+          "complete" as xs:string lifecycle:transition,
+          block.number as xs:int blockNumber,
+          tx.from as xs:string requester,
+          tx.to as xs:string receivingContract,
+          tx.transactionIndex as xs:int txIndex,
+          tx.hash as xs:string txSuccessful,
+          tx.gas as xs:int gas,
+          tx.gasUsed as xs:int gasUsed,
+          tx.cumulativeGasUsed as xs:int cumulativeGasUsed,
+          tx.gasPrice as xs:int gasPrice
+        );
+      }
+      EMIT XES EVENT ()(kittyId)()(
+        "Is Born" as xs:string concept:name,
+        block.timestamp as xs:date time:timestamp,
+        "complete" as xs:string lifecycle:transition,
+        block.number as xs:int blockNumber,
+        tx.from as xs:string requester,
+        tx.to as xs:string receivingContract,
+        tx.transactionIndex as xs:int txIndex,
+        tx.hash as xs:string txSuccessful,
+        tx.gas as xs:int gas,
+        tx.gasUsed as xs:int gasUsed,
+        tx.cumulativeGasUsed as xs:int cumulativeGasUsed,
+        tx.gasPrice as xs:int gasPrice
+      );
+      
+      bool containsMatron = contains(kitties, matronId);
+      IF (containsMatron && giveBirth) {
+        EMIT XES EVENT ()(matronId)()(
+          "giveBirth()" as xs:string concept:name,
+          block.timestamp as xs:date time:timestamp,
+          "complete" as xs:string lifecycle:transition,
+          block.number as xs:int blockNumber,
+          tx.from as xs:string requester,
+          tx.to as xs:string receivingContract,
+          tx.transactionIndex as xs:int txIndex,
+          tx.hash as xs:string txSuccessful,
+          tx.gas as xs:int gas,
+          tx.gasUsed as xs:int gasUsed,
+          tx.cumulativeGasUsed as xs:int cumulativeGasUsed,
+          tx.gasPrice as xs:int gasPrice
+        );
+      }
+      IF (containsMatron) {
+        EMIT XES EVENT ()(matronId)()(
+          "Give Birth as Matron" as xs:string concept:name,
+          block.timestamp as xs:date time:timestamp,
+          "complete" as xs:string lifecycle:transition,
+          block.number as xs:int blockNumber,
+          tx.from as xs:string requester,
+          tx.to as xs:string receivingContract,
+          tx.transactionIndex as xs:int txIndex,
+          tx.hash as xs:string txSuccessful,
+          tx.gas as xs:int gas,
+          tx.gasUsed as xs:int gasUsed,
+          tx.cumulativeGasUsed as xs:int cumulativeGasUsed,
+          tx.gasPrice as xs:int gasPrice
+        );
+      }
+
+      bool containsSire = contains(kitties, sireId);
+      IF (containsSire && giveBirth) {
+        EMIT XES EVENT ()(sireId)()(
+          "giveBirth()" as xs:string concept:name,
+          block.timestamp as xs:date time:timestamp,
+          "complete" as xs:string lifecycle:transition,
+          block.number as xs:int blockNumber,
+          tx.from as xs:string requester,
+          tx.to as xs:string receivingContract,
+          tx.transactionIndex as xs:int txIndex,
+          tx.hash as xs:string txSuccessful,
+          tx.gas as xs:int gas,
+          tx.gasUsed as xs:int gasUsed,
+          tx.cumulativeGasUsed as xs:int cumulativeGasUsed,
+          tx.gasPrice as xs:int gasPrice
+        );
+      }
+      IF (containsSire) {
+        EMIT XES EVENT ()(sireId)()(
+          "Give Birth as Sire" as xs:string concept:name,
+          block.timestamp as xs:date time:timestamp,
+          "complete" as xs:string lifecycle:transition,
+          block.number as xs:int blockNumber,
+          tx.from as xs:string requester,
+          tx.to as xs:string receivingContract,
+          tx.transactionIndex as xs:int txIndex,
+          tx.hash as xs:string txSuccessful,
+          tx.gas as xs:int gas,
+          tx.gasUsed as xs:int gasUsed,
+          tx.cumulativeGasUsed as xs:int cumulativeGasUsed,
+          tx.gasPrice as xs:int gasPrice
+        );
+      }
+    }
+    
+    // AuctionCreated
+    bool createAuction = false;
+    TRANSACTION INPUT (0xb1690C08E213a35Ed9bAb7B318DE14420FB57d8C) (
+      createAuction(uint256 _tokenId,uint256 _startingPrice,uint256 _endingPrice,uint256 _duration,address _seller)
+    ){
+      createAuction = true;
+    }
+    
+    bool createSiringAuction = false;
+    TRANSACTION INPUT (0x06012c8cf97BEaD5deAe237070F9587f8E7A266d) (
+      createSiringAuction(uint256 _kittyId,uint256 _startingPrice,uint256 _endingPrice,uint256 _duration)
+    ){
+      createSiringAuction = true;
+    }
+    
+    bool createSaleAuction = false;
+    TRANSACTION INPUT (0x06012c8cf97BEaD5deAe237070F9587f8E7A266d) (
+      createSaleAuction(uint256 _kittyId,uint256 _startingPrice,uint256 _endingPrice,uint256 _duration)
+    ){
+      createSaleAuction = true;
+    }
+
+    LOG ENTRIES (0xb1690c08e213a35ed9bab7b318de14420fb57d8c) (AuctionCreated(uint256 tokenId, uint256 startingPrice, uint256 endingPrice, uint256 duration)) {
+      bool containsKitty = contains(kitties, tokenId);
+      IF (containsKitty && createAuction) {
+        EMIT XES EVENT ()(tokenId)()(
+          "createAuction()" as xs:string concept:name,
+          block.timestamp as xs:date time:timestamp,
+          "complete" as xs:string lifecycle:transition,
+          block.number as xs:int blockNumber,
+          tx.from as xs:string requester,
+          tx.to as xs:string receivingContract,
+          tx.transactionIndex as xs:int txIndex,
+          tx.hash as xs:string txSuccessful,
+          tx.gas as xs:int gas,
+          tx.gasUsed as xs:int gasUsed,
+          tx.cumulativeGasUsed as xs:int cumulativeGasUsed,
+          tx.gasPrice as xs:int gasPrice
+        );
+      }
+      IF (containsKitty && createSiringAuction) {
+        EMIT XES EVENT ()(tokenId)()(
+          "createSiringAuction()" as xs:string concept:name,
+          block.timestamp as xs:date time:timestamp,
+          "complete" as xs:string lifecycle:transition,
+          block.number as xs:int blockNumber,
+          tx.from as xs:string requester,
+          tx.to as xs:string receivingContract,
+          tx.transactionIndex as xs:int txIndex,
+          tx.hash as xs:string txSuccessful,
+          tx.gas as xs:int gas,
+          tx.gasUsed as xs:int gasUsed,
+          tx.cumulativeGasUsed as xs:int cumulativeGasUsed,
+          tx.gasPrice as xs:int gasPrice
+        );
+        EMIT XES EVENT ()(tokenId)()(
+          "Put Up for Siring Auction" as xs:string concept:name,
+          block.timestamp as xs:date time:timestamp,
+          "complete" as xs:string lifecycle:transition,
+          block.number as xs:int blockNumber,
+          tx.from as xs:string requester,
+          tx.to as xs:string receivingContract,
+          tx.transactionIndex as xs:int txIndex,
+          tx.hash as xs:string txSuccessful,
+          tx.gas as xs:int gas,
+          tx.gasUsed as xs:int gasUsed,
+          tx.cumulativeGasUsed as xs:int cumulativeGasUsed,
+          tx.gasPrice as xs:int gasPrice
+        );
+      }
+      IF (containsKitty && createSaleAuction) {
+        EMIT XES EVENT ()(tokenId)()(
+          "createSaleAuction()" as xs:string concept:name,
+          block.timestamp as xs:date time:timestamp,
+          "complete" as xs:string lifecycle:transition,
+          block.number as xs:int blockNumber,
+          tx.from as xs:string requester,
+          tx.to as xs:string receivingContract,
+          tx.transactionIndex as xs:int txIndex,
+          tx.hash as xs:string txSuccessful,
+          tx.gas as xs:int gas,
+          tx.gasUsed as xs:int gasUsed,
+          tx.cumulativeGasUsed as xs:int cumulativeGasUsed,
+          tx.gasPrice as xs:int gasPrice
+        );
+        EMIT XES EVENT ()(tokenId)()(
+          "Put Up for Sale Auction" as xs:string concept:name,
+          block.timestamp as xs:date time:timestamp,
+          "complete" as xs:string lifecycle:transition,
+          block.number as xs:int blockNumber,
+          tx.from as xs:string requester,
+          tx.to as xs:string receivingContract,
+          tx.transactionIndex as xs:int txIndex,
+          tx.hash as xs:string txSuccessful,
+          tx.gas as xs:int gas,
+          tx.gasUsed as xs:int gasUsed,
+          tx.cumulativeGasUsed as xs:int cumulativeGasUsed,
+          tx.gasPrice as xs:int gasPrice
+        );
+      }
+      IF (containsKitty) {
+        EMIT XES EVENT ()(tokenId)()(
+          "Put Up for Auction" as xs:string concept:name,
+          block.timestamp as xs:date time:timestamp,
+          "complete" as xs:string lifecycle:transition,
+          block.number as xs:int blockNumber,
+          tx.from as xs:string requester,
+          tx.to as xs:string receivingContract,
+          tx.transactionIndex as xs:int txIndex,
+          tx.hash as xs:string txSuccessful,
+          tx.gas as xs:int gas,
+          tx.gasUsed as xs:int gasUsed,
+          tx.cumulativeGasUsed as xs:int cumulativeGasUsed,
+          tx.gasPrice as xs:int gasPrice
+        );
+      }
+    }
+    
+    // approveSiring
+    TRANSACTION INPUT (0x06012c8cf97BEaD5deAe237070F9587f8E7A266d) (
+    	approveSiring(address _addr, uint256 _sireId)
+    ){
+    	EMIT XES EVENT ()(_sireId)()(
+        "approveSiring()" as xs:string concept:name,
+        block.timestamp as xs:date time:timestamp,
+        "complete" as xs:string lifecycle:transition,
+        block.number as xs:int blockNumber,
+        tx.from as xs:string requester,
+        tx.to as xs:string receivingContract,
+        tx.transactionIndex as xs:int txIndex,
+        tx.hash as xs:string txSuccessful,
+        tx.gas as xs:int gas,
+        tx.gasUsed as xs:int gasUsed,
+        tx.cumulativeGasUsed as xs:int cumulativeGasUsed,
+        tx.gasPrice as xs:int gasPrice
+      );
+    }
+    
+    // AuctionCancelled
+    // cancelAuction
+    bool cancelAuction = false;
+    TRANSACTION INPUT (0xb1690C08E213a35Ed9bAb7B318DE14420FB57d8C) (
+    	cancelAuction(uint256 _tokenId)
+    ){
+    	cancelAuction = true;
+    }
+    
+    // cancelAuctionWhenPaused
+    bool cancelAuctionWhenPaused = false;
+    TRANSACTION INPUT (0xb1690C08E213a35Ed9bAb7B318DE14420FB57d8C) (
+    	cancelAuctionWhenPaused(uint256 _tokenId)
+    ){
+    	cancelAuctionWhenPaused = true;
+    }
+
+    LOG ENTRIES (0xb1690c08e213a35ed9bab7b318de14420fb57d8c) (AuctionCancelled(uint256 tokenId)) {
+      bool containsKitty = contains(kitties, tokenId);
+      IF (containsKitty && cancelAuction) {
+        EMIT XES EVENT ()(tokenId)()(
+          "cancelAuction()" as xs:string concept:name,
+          block.timestamp as xs:date time:timestamp,
+          "complete" as xs:string lifecycle:transition,
+          block.number as xs:int blockNumber,
+          tx.from as xs:string requester,
+          tx.to as xs:string receivingContract,
+          tx.transactionIndex as xs:int txIndex,
+          tx.hash as xs:string txSuccessful,
+          tx.gas as xs:int gas,
+          tx.gasUsed as xs:int gasUsed,
+          tx.cumulativeGasUsed as xs:int cumulativeGasUsed,
+          tx.gasPrice as xs:int gasPrice
+        );
+      }
+      IF (containsKitty && cancelAuctionWhenPaused) {
+        EMIT XES EVENT ()(tokenId)()(
+          "cancelAuctionWhenPaused()" as xs:string concept:name,
+          block.timestamp as xs:date time:timestamp,
+          "complete" as xs:string lifecycle:transition,
+          block.number as xs:int blockNumber,
+          tx.from as xs:string requester,
+          tx.to as xs:string receivingContract,
+          tx.transactionIndex as xs:int txIndex,
+          tx.hash as xs:string txSuccessful,
+          tx.gas as xs:int gas,
+          tx.gasUsed as xs:int gasUsed,
+          tx.cumulativeGasUsed as xs:int cumulativeGasUsed,
+          tx.gasPrice as xs:int gasPrice
+        );
+      }
+      IF (containsKitty) {
+        EMIT XES EVENT ()(tokenId)()(
+          "Cancel Auction" as xs:string concept:name,
+          block.timestamp as xs:date time:timestamp,
+          "complete" as xs:string lifecycle:transition,
+          block.number as xs:int blockNumber,
+          tx.from as xs:string requester,
+          tx.to as xs:string receivingContract,
+          tx.transactionIndex as xs:int txIndex,
+          tx.hash as xs:string txSuccessful,
+          tx.gas as xs:int gas,
+          tx.gasUsed as xs:int gasUsed,
+          tx.cumulativeGasUsed as xs:int cumulativeGasUsed,
+          tx.gasPrice as xs:int gasPrice
+        );
+      }
+    }    
+    
+    // AuctionSuccessful
+    // bid
+    bool bid = false;
+    TRANSACTION INPUT (0xb1690C08E213a35Ed9bAb7B318DE14420FB57d8C) (
+    	bid(uint256 _tokenId)
+    ){
+    	bid = true;
+    }
+    
+    // bidOnSiringAuction
+    bool bidOnSiringAuction = false;
+    TRANSACTION INPUT (0x06012c8cf97BEaD5deAe237070F9587f8E7A266d) (
+    	bidOnSiringAuction(uint256 _sireId,uint256 _matronId)
+    ){
+    	bidOnSiringAuction = true;
+    }
+    
+    LOG ENTRIES (0xb1690C08E213a35Ed9bAb7B318DE14420FB57d8C) (
+    	AuctionSuccessful(uint256 tokenId,uint256 totalPrice,address winner)
+    ){
+      bool containsKitty = contains(kitties, tokenId);
+      IF (containsKitty && bid) {
+        EMIT XES EVENT ()(tokenId)()(
+          "bid()" as xs:string concept:name,
+          block.timestamp as xs:date time:timestamp,
+          "complete" as xs:string lifecycle:transition,
+          block.number as xs:int blockNumber,
+          tx.from as xs:string requester,
+          tx.to as xs:string receivingContract,
+          tx.transactionIndex as xs:int txIndex,
+          tx.hash as xs:string txSuccessful,
+          tx.gas as xs:int gas,
+          tx.gasUsed as xs:int gasUsed,
+          tx.cumulativeGasUsed as xs:int cumulativeGasUsed,
+          tx.gasPrice as xs:int gasPrice
+        );
+      }
+      IF (containsKitty && bidOnSiringAuction) {
+        EMIT XES EVENT ()(tokenId)()(
+          "bidOnSiringAuction()" as xs:string concept:name,
+          block.timestamp as xs:date time:timestamp,
+          "complete" as xs:string lifecycle:transition,
+          block.number as xs:int blockNumber,
+          tx.from as xs:string requester,
+          tx.to as xs:string receivingContract,
+          tx.transactionIndex as xs:int txIndex,
+          tx.hash as xs:string txSuccessful,
+          tx.gas as xs:int gas,
+          tx.gasUsed as xs:int gasUsed,
+          tx.cumulativeGasUsed as xs:int cumulativeGasUsed,
+          tx.gasPrice as xs:int gasPrice
+        );
+        EMIT XES EVENT ()(tokenId)()(
+          "Complete Siring Auction" as xs:string concept:name,
+          block.timestamp as xs:date time:timestamp,
+          "complete" as xs:string lifecycle:transition,
+          block.number as xs:int blockNumber,
+          tx.from as xs:string requester,
+          tx.to as xs:string receivingContract,
+          tx.transactionIndex as xs:int txIndex,
+          tx.hash as xs:string txSuccessful,
+          tx.gas as xs:int gas,
+          tx.gasUsed as xs:int gasUsed,
+          tx.cumulativeGasUsed as xs:int cumulativeGasUsed,
+          tx.gasPrice as xs:int gasPrice
+        );
+      }
+      IF (containsKitty) {
+        EMIT XES EVENT ()(tokenId)()(
+          "Complete Auction" as xs:string concept:name,
+          block.timestamp as xs:date time:timestamp,
+          "complete" as xs:string lifecycle:transition,
+          block.number as xs:int blockNumber,
+          tx.from as xs:string requester,
+          tx.to as xs:string receivingContract,
+          tx.transactionIndex as xs:int txIndex,
+          tx.hash as xs:string txSuccessful,
+          tx.gas as xs:int gas,
+          tx.gasUsed as xs:int gasUsed,
+          tx.cumulativeGasUsed as xs:int cumulativeGasUsed,
+          tx.gasPrice as xs:int gasPrice
+        );
+      }
+    }
+    
+    // Transfer
+    // transfer
+    bool transfer = false;
+    TRANSACTION INPUT (0x06012c8cf97BEaD5deAe237070F9587f8E7A266d) (
+    	transfer(address _to,uint256 _tokenId)
+    ){
+    	transfer = true;
+    }
+    
+    // transferFrom
+    bool transferFrom = false;
+    TRANSACTION INPUT (0x06012c8cf97BEaD5deAe237070F9587f8E7A266d) (
+    	transferFrom(address _from,address _to,uint256 _tokenId)
+    ){
+    	transferFrom = true;
+    }
+
+    LOG ENTRIES (0x06012c8cf97BEaD5deAe237070F9587f8E7A266d) (Transfer(address from, address to, uint256 tokenId)) {
+      bool containsKitty = contains(kitties, tokenId);
+      IF (containsKitty && transfer) {
+        EMIT XES EVENT ()(tokenId)()(
+          "transfer()" as xs:string concept:name,
+          block.timestamp as xs:date time:timestamp,
+          "complete" as xs:string lifecycle:transition,
+          block.number as xs:int blockNumber,
+          tx.from as xs:string requester,
+          tx.to as xs:string receivingContract,
+          tx.transactionIndex as xs:int txIndex,
+          tx.hash as xs:string txSuccessful,
+          tx.gas as xs:int gas,
+          tx.gasUsed as xs:int gasUsed,
+          tx.cumulativeGasUsed as xs:int cumulativeGasUsed,
+          tx.gasPrice as xs:int gasPrice
+        );
+      }
+      IF (containsKitty && transferFrom) {
+        EMIT XES EVENT ()(tokenId)()(
+          "transferFrom()" as xs:string concept:name,
+          block.timestamp as xs:date time:timestamp,
+          "complete" as xs:string lifecycle:transition,
+          block.number as xs:int blockNumber,
+          tx.from as xs:string requester,
+          tx.to as xs:string receivingContract,
+          tx.transactionIndex as xs:int txIndex,
+          tx.hash as xs:string txSuccessful,
+          tx.gas as xs:int gas,
+          tx.gasUsed as xs:int gasUsed,
+          tx.cumulativeGasUsed as xs:int cumulativeGasUsed,
+          tx.gasPrice as xs:int gasPrice
+        );
+      }
+      IF (containsKitty && bid) {
+        EMIT XES EVENT ()(tokenId)()(
+          "bid()" as xs:string concept:name,
+          block.timestamp as xs:date time:timestamp,
+          "complete" as xs:string lifecycle:transition,
+          block.number as xs:int blockNumber,
+          tx.from as xs:string requester,
+          tx.to as xs:string receivingContract,
+          tx.transactionIndex as xs:int txIndex,
+          tx.hash as xs:string txSuccessful,
+          tx.gas as xs:int gas,
+          tx.gasUsed as xs:int gasUsed,
+          tx.cumulativeGasUsed as xs:int cumulativeGasUsed,
+          tx.gasPrice as xs:int gasPrice
+        );
+      }
+      IF (containsKitty) {
+        EMIT XES EVENT ()(tokenId)()(
+          "Is Transferred" as xs:string concept:name,
+          block.timestamp as xs:date time:timestamp,
+          "complete" as xs:string lifecycle:transition,
+          block.number as xs:int blockNumber,
+          tx.from as xs:string requester,
+          tx.to as xs:string receivingContract,
+          tx.transactionIndex as xs:int txIndex,
+          tx.hash as xs:string txSuccessful,
+          tx.gas as xs:int gas,
+          tx.gasUsed as xs:int gasUsed,
+          tx.cumulativeGasUsed as xs:int cumulativeGasUsed,
+          tx.gasPrice as xs:int gasPrice
+        );
+      }
+    }
+    
+    // Approval
+    bool approval = false;
+    TRANSACTION INPUT (0x06012c8cf97BEaD5deAe237070F9587f8E7A266d) (
+    	approve(address _to,uint256 _tokenId)
+    ){
+      approval = true;
+    }
+    
+    LOG ENTRIES (0x06012c8cf97BEaD5deAe237070F9587f8E7A266d) (
+    Approval(address owner,address approved,uint256 tokenId)
+    ){
+      bool containsKitty = contains(kitties, tokenId);
+      IF (containsKitty && approval) {
+        EMIT XES EVENT ()(tokenId)()(
+          "approve()" as xs:string concept:name,
+          block.timestamp as xs:date time:timestamp,
+          "complete" as xs:string lifecycle:transition,
+          block.number as xs:int blockNumber,
+          tx.from as xs:string requester,
+          tx.to as xs:string receivingContract,
+          tx.transactionIndex as xs:int txIndex,
+          tx.hash as xs:string txSuccessful,
+          tx.gas as xs:int gas,
+          tx.gasUsed as xs:int gasUsed,
+          tx.cumulativeGasUsed as xs:int cumulativeGasUsed,
+          tx.gasPrice as xs:int gasPrice
+        );
+      }
+      IF (containsKitty) {
+    	  EMIT XES EVENT ()(tokenId)()(
+          "Transfer Approved" as xs:string concept:name,
+          block.timestamp as xs:date time:timestamp,
+          "complete" as xs:string lifecycle:transition,
+          block.number as xs:int blockNumber,
+          tx.from as xs:string requester,
+          tx.to as xs:string receivingContract,
+          tx.transactionIndex as xs:int txIndex,
+          tx.hash as xs:string txSuccessful,
+          tx.gas as xs:int gas,
+          tx.gasUsed as xs:int gasUsed,
+          tx.cumulativeGasUsed as xs:int cumulativeGasUsed,
+          tx.gasPrice as xs:int gasPrice
+        );
+      }
+    }
+    
+    // Pregnant
+    bool breedWithAuto = false;
+    TRANSACTION INPUT (0x06012c8cf97BEaD5deAe237070F9587f8E7A266d) (
+    	breedWithAuto(uint256 _matronId,uint256 _sireId)
+    ){
+    	breedWithAuto = true;
+    }
+
+    LOG ENTRIES (0x06012c8cf97BEaD5deAe237070F9587f8E7A266d) (Pregnant(address owner, uint256 matronId, uint256 sireId, uint256 cooldownEndBlock)) {
+      bool containsMatron = contains(kitties, matronId);
+      IF (containsMatron && breedWithAuto) {
+        EMIT XES EVENT ()(matronId)()(
+          "breedWithAuto()" as xs:string concept:name,
+          block.timestamp as xs:date time:timestamp,
+          "complete" as xs:string lifecycle:transition,
+          block.number as xs:int blockNumber,
+          tx.from as xs:string requester,
+          tx.to as xs:string receivingContract,
+          tx.transactionIndex as xs:int txIndex,
+          tx.hash as xs:string txSuccessful,
+          tx.gas as xs:int gas,
+          tx.gasUsed as xs:int gasUsed,
+          tx.cumulativeGasUsed as xs:int cumulativeGasUsed,
+          tx.gasPrice as xs:int gasPrice
+        );
+      }
+      IF (containsMatron && bidOnSiringAuction) {
+        EMIT XES EVENT ()(matronId)()(
+          "bidOnSiringAuction()" as xs:string concept:name,
+          block.timestamp as xs:date time:timestamp,
+          "complete" as xs:string lifecycle:transition,
+          block.number as xs:int blockNumber,
+          tx.from as xs:string requester,
+          tx.to as xs:string receivingContract,
+          tx.transactionIndex as xs:int txIndex,
+          tx.hash as xs:string txSuccessful,
+          tx.gas as xs:int gas,
+          tx.gasUsed as xs:int gasUsed,
+          tx.cumulativeGasUsed as xs:int cumulativeGasUsed,
+          tx.gasPrice as xs:int gasPrice
+        );
+      }
+      IF (containsMatron) {
+        EMIT XES EVENT ()(matronId)()(
+          "Conceive as Matron" as xs:string concept:name,
+          block.timestamp as xs:date time:timestamp,
+          "complete" as xs:string lifecycle:transition,
+          block.number as xs:int blockNumber,
+          tx.from as xs:string requester,
+          tx.to as xs:string receivingContract,
+          tx.transactionIndex as xs:int txIndex,
+          tx.hash as xs:string txSuccessful,
+          tx.gas as xs:int gas,
+          tx.gasUsed as xs:int gasUsed,
+          tx.cumulativeGasUsed as xs:int cumulativeGasUsed,
+          tx.gasPrice as xs:int gasPrice
+        );
+      }
+
+      bool containsSire = contains(kitties, sireId);
+      IF (containsSire && breedWithAuto) {
+        EMIT XES EVENT ()(sireId)()(
+          "breedWithAuto()" as xs:string concept:name,
+          block.timestamp as xs:date time:timestamp,
+          "complete" as xs:string lifecycle:transition,
+          block.number as xs:int blockNumber,
+          tx.from as xs:string requester,
+          tx.to as xs:string receivingContract,
+          tx.transactionIndex as xs:int txIndex,
+          tx.hash as xs:string txSuccessful,
+          tx.gas as xs:int gas,
+          tx.gasUsed as xs:int gasUsed,
+          tx.cumulativeGasUsed as xs:int cumulativeGasUsed,
+          tx.gasPrice as xs:int gasPrice
+        );
+      }
+      IF (containsSire && bidOnSiringAuction) {
+        EMIT XES EVENT ()(sireId)()(
+          "bidOnSiringAuction()" as xs:string concept:name,
+          block.timestamp as xs:date time:timestamp,
+          "complete" as xs:string lifecycle:transition,
+          block.number as xs:int blockNumber,
+          tx.from as xs:string requester,
+          tx.to as xs:string receivingContract,
+          tx.transactionIndex as xs:int txIndex,
+          tx.hash as xs:string txSuccessful,
+          tx.gas as xs:int gas,
+          tx.gasUsed as xs:int gasUsed,
+          tx.cumulativeGasUsed as xs:int cumulativeGasUsed,
+          tx.gasPrice as xs:int gasPrice
+        );
+      }
+      IF (containsSire){
+        EMIT XES EVENT ()(sireId)()(
+          "Conceive as Sire" as xs:string concept:name,
+          block.timestamp as xs:date time:timestamp,
+          "complete" as xs:string lifecycle:transition,
+          block.number as xs:int blockNumber,
+          tx.from as xs:string requester,
+          tx.to as xs:string receivingContract,
+          tx.transactionIndex as xs:int txIndex,
+          tx.hash as xs:string txSuccessful,
+          tx.gas as xs:int gas,
+          tx.gasUsed as xs:int gasUsed,
+          tx.cumulativeGasUsed as xs:int cumulativeGasUsed,
+          tx.gasPrice as xs:int gasPrice
+        );
+      }
+    }
+  }
+}
